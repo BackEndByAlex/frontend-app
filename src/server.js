@@ -11,7 +11,12 @@ import logger from 'morgan'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { router as routes } from './routes/pageRoutes.js'
+import session from 'express-session'
 import 'dotenv/config'
+
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 // Get the path of the current module's directory.
 const directoryFullName = dirname(fileURLToPath(import.meta.url))
@@ -21,9 +26,19 @@ const baseURL = process.env.BASE_URL || '/'
 
 // Create Express application.
 const app = express()
+app.use(express.json())
 
 // Set up a morgan logger using the dev format for log entries.
 app.use(logger('dev'))
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || '3x@mpl3-§uper-S3cr3t-K3y!',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false
+  }
+}))
 
 // View engine setup.
 app.set('view engine', 'ejs')
