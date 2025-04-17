@@ -44,7 +44,7 @@ export const renderDashboard = (req, res) => {
   const user = req.session?.user
   if (!user) return res.redirect('/login')
 
-  res.render('home/dashboard', { user })
+  res.render('dashboard/dashboard', { user })
 }
 
 export const renderLogin = (req, res) => {

@@ -1,0 +1,81 @@
+body {
+  background-color: #0f172a;
+  font-family: 'Segoe UI', sans-serif;
+  color: #f1f5f9;
+  margin: 0;
+  padding: 0;
+}
+
+.register-page {
+  max-width: 420px;
+  margin: 4rem auto;
+  background-color: #1e293b;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.register-page h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  color: #38bdf8;
+}
+
+#register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#register-form input {
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: #f8fafc;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  outline: none;
+}
+
+#register-form input::placeholder {
+  color: #94a3b8;
+}
+
+#register-form button {
+  background-color: #38bdf8;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 6px;
+  color: #0f172a;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+#register-form button:hover {
+  background-color: #0ea5e9;
+}
+
+p {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+#google-login {
+  width: 100%;
+  background-color: #f8fafc;
+  color: #1e293b;
+  border: none;
+  padding: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+#google-login:hover {
+  background-color: #e2e8f0;
+}

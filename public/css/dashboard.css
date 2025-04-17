@@ -1,0 +1,40 @@
+.dashboard-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+  color: white;
+}
+
+.dashboard-page h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #38bdf8;
+}
+
+.dashboard-section {
+  background-color: #1e293b;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  margin-bottom: 2rem;
+}
+
+.dashboard-section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #facc15;
+}
+
+.dashboard-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.dashboard-section li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #334155;
+}
+
+.dashboard-section li:last-child {
+  border-bottom: none;
+}
