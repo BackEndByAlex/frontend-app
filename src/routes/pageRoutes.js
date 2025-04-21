@@ -5,7 +5,8 @@ import {
   handleGoogleLoginProxy,
   renderDashboard,
   renderLogin,
-  handleFormRegistration
+  handleFormRegistration,
+  handleFormLogin
 } from '../controllers/viewController.js'
 
 export const router = express.Router()
@@ -20,3 +21,4 @@ router.post('/auth/google', handleGoogleLoginProxy)
 router.get('/dashboard', renderDashboard)
 router.get('/login', renderLogin)
 router.post('/register', handleFormRegistration)
+router.post('/auth/login', handleFormLogin)

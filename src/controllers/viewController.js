@@ -100,3 +100,31 @@ export const handleFormRegistration = async (req, res) => {
     })
   }
 }
+
+export const handleFormLogin = async (req, res) => {
+  const { email, password } = req.body
+
+  try {
+    const response = await fetch('http://localhost:4000/api/v1/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+
+    const contentType = response.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error('Svar från auth-service är inte JSON')
+    }
+
+    const { token } = await response.json()
+    const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
+
+    req.session.user = payload
+    res.redirect('/dashboard')
+  } catch (err) {
+    console.error('Login failed:', err)
+    res.render('users/login', {
+      error: 'Felaktig e-post eller lösenord'
+    })
+  }
+}
