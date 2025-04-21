@@ -4,7 +4,8 @@ import {
   getFirebaseConfig,
   handleGoogleLoginProxy,
   renderDashboard,
-  renderLogin
+  renderLogin,
+  handleFormRegistration
 } from '../controllers/viewController.js'
 
 export const router = express.Router()
@@ -18,3 +19,4 @@ router.get('/firebase-config', getFirebaseConfig)
 router.post('/auth/google', handleGoogleLoginProxy)
 router.get('/dashboard', renderDashboard)
 router.get('/login', renderLogin)
+router.post('/register', handleFormRegistration)

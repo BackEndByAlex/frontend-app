@@ -1,22 +1,15 @@
 <script type="module" src="/js/register.js"></script>
 <link rel="stylesheet" href="css/register.css">
-<script type="module" src="/js/register-auth.js"></script>
 
 <main class="register-page">
   <h1>Register</h1>
 
-  <!-- Step 1: Name and Email -->
-  <form id="register-form">
-    <div id="step-1">
+  <form id="register-form" action="/register" method="POST">
+    <div>
       <input type="text" id="firstName" name="firstName" placeholder="First Name" required />
       <input type="text" id="lastName" name="lastName" placeholder="Last Name" required />
       <input type="email" id="email" name="email" placeholder="Email" required />
       <input type="email" id="confirmEmail" name="confirmEmail" placeholder="Confirm Email" required />
-      <button type="button" id="next-step">Next</button>
-    </div>
-
-    <!-- Step 2: Passwords -->
-    <div id="step-2" style="display: none;">
       <input type="password" id="password" name="password" placeholder="Password" required />
       <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required />
       <button type="submit">Register</button>
@@ -26,4 +19,9 @@
   <p>Or sign up with Google:</p>
   <button id="google-login">Continue with Google</button>
 
+  <% if (typeof error !== 'undefined' && error) { %>
+    <p style="color: #f87171;"><%= error %></p>
+  <% } %>
+  <p>Already have an account? <a href="/login">Login</a></p>
+  <p>By signing up, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>  
 </main>
