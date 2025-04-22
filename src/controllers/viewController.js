@@ -42,42 +42,6 @@ export const getFirebaseConfig = (req, res) => {
   })
 }
 
-export const handleGoogleLoginProxy = async (req, res) => {
-  try {
-    // 1. Logga in via auth-service
-    const apiRes = await fetch('http://localhost:4000/api/v1/google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken: req.body.idToken }),
-      credentials: 'include'
-    })
-
-    if (!apiRes.ok) throw new Error('Auth-service rejected token.')
-
-    const { token } = await apiRes.json()
-    const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
-
-    // 2. Spara JWT + användardata i session
-    req.session.user = {
-      ...payload,
-      jwt: token
-    }
-
-    // 3. Skicka verifieringskod till användarens mail
-    await fetch('http://localhost:4000/api/v1/send-verification-code', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken: req.body.idToken })
-    })
-
-    // 4. Gå vidare till dashboard
-    res.redirect('/dashboard')
-  } catch (err) {
-    console.error('Proxy login failed:', err)
-    res.redirect('/login')
-  }
-}
-
 export const handleFormRegistration = async (req, res) => {
   const { firstName, lastName, email, confirmEmail, password, confirmPassword } = req.body
 
@@ -128,33 +92,89 @@ export const handleFormRegistration = async (req, res) => {
   }
 }
 
-export const handleFormLogin = async (req, res) => {
-  const { email, password } = req.body
-
+export const handleGoogleLoginProxy = async (req, res) => {
   try {
-    const response = await fetch('http://localhost:4000/api/v1/login', {
+    // 1. Logga in via auth-service
+    const apiRes = await fetch('http://localhost:4000/api/v1/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ idToken: req.body.idToken }),
+      credentials: 'include'
     })
 
-    const contentType = response.headers.get('content-type')
-    if (!contentType || !contentType.includes('application/json')) {
-      throw new Error('Svar från auth-service är inte JSON')
-    }
+    if (!apiRes.ok) throw new Error('Auth-service rejected token.')
 
-    const { token } = await response.json()
+    const { token } = await apiRes.json()
     const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
 
+    // 2. Spara JWT + användardata i session
     req.session.user = {
       ...payload,
       jwt: token
     }
+
+    // 3. Skicka verifieringskod till användarens mail
+    await fetch('http://localhost:4000/api/v1/send-verification-code/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken: req.body.idToken })
+    })
+
+    // 4. Gå vidare till dashboard
     res.redirect('/dashboard')
   } catch (err) {
-    console.error('Login failed:', err)
+    console.error('Proxy login failed:', err)
+    res.redirect('/login')
+  }
+}
+
+export const handleFormLogin = async (req, res) => {
+  try {
+    // 1. Skicka login-data till auth-service
+    const apiRes = await fetch('http://localhost:4000/api/v1/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body)
+    })
+
+    if (!apiRes.ok) {
+      return res.render('users/login', {
+        error: 'Fel e-post eller lösenord.'
+      })
+    }
+
+    const { token } = await apiRes.json()
+    const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
+
+    // 2. Spara i session
+    req.session.user = {
+      ...payload,
+      jwt: token
+    }
+
+    // 3. Försök skicka verifieringskod via auth-service
+    const codeRes = await fetch('http://localhost:4000/api/v1/send-verification-code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    if (!codeRes.ok) {
+      req.session.destroy(() => {
+        return res.render('users/login', {
+          error: 'Din Gmail-adress kunde inte verifieras. Vänligen använd en riktig Gmail.'
+        })
+      })
+    }
+
+    // 4. Allt gick bra → vidare till dashboard
+    res.redirect('/dashboard')
+  } catch (err) {
+    console.error('[LOGIN] Fel vid inloggning:', err)
     res.render('users/login', {
-      error: 'Felaktig e-post eller lösenord'
+      error: 'Något gick fel. Försök igen senare.'
     })
   }
 }
