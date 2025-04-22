@@ -4,7 +4,7 @@ import fs from 'fs'
 const publicKey = fs.readFileSync('./public.pem')
 
 export const requireAuth = (req, res, next) => {
-  const token = req.cookies.jwt
+  const token = req.session?.user?.jwt
 
   if (!token) {
     return res.redirect('/login')
@@ -15,6 +15,7 @@ export const requireAuth = (req, res, next) => {
     req.user = payload
     next()
   } catch (err) {
+    console.error('Token verification failed:', err)
     return res.redirect('/login')
   }
 }

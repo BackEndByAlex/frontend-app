@@ -44,10 +44,12 @@ export const getFirebaseConfig = (req, res) => {
 
 export const handleGoogleLoginProxy = async (req, res) => {
   try {
+    // 1. Logga in via auth-service
     const apiRes = await fetch('http://localhost:4000/api/v1/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify({ idToken: req.body.idToken }),
+      credentials: 'include'
     })
 
     if (!apiRes.ok) throw new Error('Auth-service rejected token.')
@@ -55,7 +57,20 @@ export const handleGoogleLoginProxy = async (req, res) => {
     const { token } = await apiRes.json()
     const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
 
-    req.session.user = payload
+    // 2. Spara JWT + användardata i session
+    req.session.user = {
+      ...payload,
+      jwt: token
+    }
+
+    // 3. Skicka verifieringskod till användarens mail
+    await fetch('http://localhost:4000/api/v1/send-verification-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken: req.body.idToken })
+    })
+
+    // 4. Gå vidare till dashboard
     res.redirect('/dashboard')
   } catch (err) {
     console.error('Proxy login failed:', err)
@@ -131,7 +146,10 @@ export const handleFormLogin = async (req, res) => {
     const { token } = await response.json()
     const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
 
-    req.session.user = payload
+    req.session.user = {
+      ...payload,
+      jwt: token
+    }
     res.redirect('/dashboard')
   } catch (err) {
     console.error('Login failed:', err)
