@@ -2,15 +2,13 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: #0f172a;
-  color: white;
+  min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
-  display: flex;
-  flex-direction: column;
+  background-color: #0f172a;
 }
 
-body {
-  min-height: 100vh;
+* {
+  box-sizing: border-box;
 }
 
 main {
@@ -22,10 +20,18 @@ main {
   flex-direction: column;
 }
 
-footer {
-  padding: 1rem;
-  text-align: center;
-  color: #94a3b8;
-  font-size: 0.9rem;
-  border-top: 1px solid #1e293b;
+/* Globala knappar */
+.btn-primary {
+  display: inline-block;
+  background-color: #003865;
+  color: white;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #012f5f;
 }

@@ -1,17 +1,3 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', sans-serif;
-  color: #111827;
-  background-color: #fff;
-  line-height: 1.6;
-}
-
 .hero {
   min-height: 100vh;
   background: url('/img/Background.png') center/cover no-repeat;
@@ -52,19 +38,4 @@ body {
   font-size: 1.125rem;
   color: #374151;
   margin-bottom: 2rem;
-}
-
-.btn-primary {
-  display: inline-block;
-  background-color: #003865;
-  color: white;
-  padding: 0.75rem 2rem;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: #012f5f;
 }

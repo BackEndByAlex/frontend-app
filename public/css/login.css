@@ -1,3 +1,7 @@
+body {
+  background-color: transparent;
+}
+
 .auth-section {
   background: #0f172a;
   min-height: 80vh;

@@ -1,47 +1,115 @@
+/* HEADER */
 .site-header {
-  background: #0f172a;
-  color: #fff;
-  padding: 1rem 0;
-  border-bottom: 1px solid #1e293b;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  padding: 1rem;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
 }
 
-.site-header .container {
-  padding: 0 1rem;
+.header-container {
+  background-color: white;
+  border-radius: 1rem;
+  max-width: 1200px;
+  width: 100%;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.brand-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #003865;
+  text-decoration: none;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.3rem;
 }
 
-.site-header .logo a {
-  font-weight: bold;
-  color: #38bdf8;
-  font-size: 1.5rem;
-  text-decoration: none;
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
-.nav-links a {
-  color: #e2e8f0;
-  margin-left: 1.5rem;
+.header-nav a {
   text-decoration: none;
+  color: #1e293b;
   font-weight: 500;
 }
 
-.nav-links a:hover {
-  color: #38bdf8;
+.welcome-text {
+  font-weight: 600;
+  color: #111827;
 }
 
-.site-footer {
-  background: #0f172a;
-  color: #94a3b8;
-  padding: 1rem 0;
+.btn-logout {
+  background-color: #e11d48;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-logout:hover {
+  background-color: #be123c;
+}
+
+/* HAMBURGER MENU */
+.menu-toggle {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1e293b;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .header-nav.nav-open {
+    display: flex;
+  }
+
+  .header-nav a,
+  .welcome-text,
+  .btn-logout {
+    width: 100%;
+    padding: 0.5rem 0;
+    text-align: left;
+  }
+}
+
+footer {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  padding: 1rem;
   text-align: center;
   font-size: 0.9rem;
-  margin-top: auto;
-  border-top: 1px solid #1e293b;
-}
-
-.site-footer .container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 1rem;
 }

@@ -1,18 +1,12 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js'
+import { getFirebaseApp } from './FirebaseClient.js'
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js'
 
-async function getFirebaseConfig() {
-  const res = await fetch('/firebase-config')
-  return await res.json()
-}
-
 async function main() {
-  const firebaseConfig = await getFirebaseConfig()
-  const app = initializeApp(firebaseConfig)
+  const app = await getFirebaseApp()
   const auth = getAuth(app)
   const provider = new GoogleAuthProvider()
 

@@ -1,13 +1,25 @@
 <link rel="stylesheet" href="css/header-footer.css">
-
-<header class="site-header">
-  <div class="container">
-    <div class="logo">
-      <a href="/">🔐 TimeLock</a>
+<script type="module" src="/js/logout.js"></script>
+<script type="module" src="/js/header.js"></script>
+<header class="site-header sticky-header">
+  <div class="header-container">
+    <div class="header-left">
+      <a href="/" class="brand-logo">🔐 TimeLock</a>
     </div>
-    <nav class="nav-links">
-      <a href="/register">Register</a>
-      <a href="/login">Log in</a>
+
+    <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+
+    <nav class="header-nav">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <span class="welcome-text">Välkommen, <%= user.name %></span>
+        <a href="/dashboard">Dashboard</a>
+        <form id="logout-form">
+          <button type="submit" class="btn-logout">Logga ut</button>
+        </form>
+      <% } else { %>
+        <a href="/register">Registrera</a>
+        <a href="/login">Logga in</a>
+      <% } %>
     </nav>
   </div>
 </header>

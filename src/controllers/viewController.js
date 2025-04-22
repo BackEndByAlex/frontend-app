@@ -4,6 +4,12 @@ import fs from 'fs'
 
 const publicKey = fs.readFileSync('./public.pem')
 
+export const renderHome = (req, res) => {
+  res.render('home/index', {
+    user: req.session.user
+  })
+}
+
 export const renderRegister = (req, res) => {
   res.render('users/register')
 }
@@ -17,6 +23,12 @@ export const renderDashboard = (req, res) => {
 
 export const renderLogin = (req, res) => {
   res.render('users/login')
+}
+
+export const logout = (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/')
+  })
 }
 
 export const getFirebaseConfig = (req, res) => {
