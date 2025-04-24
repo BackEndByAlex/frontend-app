@@ -1,3 +1,5 @@
+import { verifyCodeFromAuthService } from '../services/apiClient.js'
+
 /**
  * Renders the home page.
  *
@@ -19,8 +21,37 @@ export const renderHome = (req, res) => {
  * @throws {Error} If the user is not authenticated.
  */
 export const renderDashboard = (req, res) => {
-  const user = req.session?.user
+  const user = req.session.user
   if (!user) return res.redirect('/login')
 
-  res.render('dashboard/dashboard', { user })
+  const codeSuccess = req.session.codeSuccess
+  const codeError = req.session.codeError
+
+  req.session.codeSuccess = null
+  req.session.codeError = null
+
+  res.render('dashboard/dashboard', {
+    user,
+    codeSuccess,
+    codeError
+  })
+}
+
+export const postVerifyCode = async (req, res) => {
+  try {
+    const { code } = req.body
+    const token = req.session.user?.jwt
+    const user = req.session.user?.email
+
+    await verifyCodeFromAuthService(user, code, token)
+
+    req.session.codeSuccess = 'Koden har verifierats!'
+    req.session.codeError = 'Koden är felaktig!'
+
+    return res.redirect('/dashboard')
+  } catch (err) {
+    console.error('[Fel vid verifiering]', err.message)
+    req.session.codeError = 'Något gick fel vid verifiering'
+    return res.redirect('/dashboard')
+  }
 }

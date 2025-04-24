@@ -1,2 +1,13 @@
 <link rel="stylesheet" href="css/dashboard.css">
-<h1>Welcome <%= user.name %></h1>
+
+<h1>Welcome <%= user?.name %></h1>
+
+<h2>Verifiera kod från mejlet</h2>
+<% if (!codeSuccess) { %>
+  <form action="/verify-code" method="POST">
+    <input type="text" name="code" placeholder="Skriv in din kod här" required />
+    <button type="submit">Verifiera kod</button>
+  </form>
+<% } else { %>
+  <p style="color: green;">Koden är verifierad ✅</p>
+<% } %>

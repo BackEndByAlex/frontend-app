@@ -13,7 +13,8 @@ import {
 
 import {
   renderHome,
-  renderDashboard
+  renderDashboard,
+  postVerifyCode
 } from '../controllers/pageController.js'
 
 import { getFirebaseConfig } from '../controllers/fireBaseController.js'
@@ -30,3 +31,4 @@ router.get('/login', renderLogin)
 router.post('/register', handleFormRegistration)
 router.post('/auth/login', handleFormLogin)
 router.post('/logout', logout)
+router.post('/verify-code', postVerifyCode)
