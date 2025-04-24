@@ -1,15 +1,22 @@
 import express from 'express'
 import {
   renderRegister,
-  getFirebaseConfig,
-  handleGoogleLoginProxy,
-  renderDashboard,
+  handleFormRegistration
+} from '../controllers/registerController.js'
+
+import {
   renderLogin,
-  handleFormRegistration,
   handleFormLogin,
-  logout,
-  renderHome
-} from '../controllers/viewController.js'
+  handleGoogleLoginProxy,
+  logout
+} from '../controllers/authController.js'
+
+import {
+  renderHome,
+  renderDashboard
+} from '../controllers/pageController.js'
+
+import { getFirebaseConfig } from '../controllers/fireBaseController.js'
 import { requireAuth } from '../authMiddleware/authMiddleware.js'
 
 export const router = express.Router()

@@ -5,6 +5,16 @@ import session from 'express-session'
 import path from 'path'
 import { router } from '../src/routes/pageRoutes.js'
 
+/**
+ * Creates an Express application with a simulated logged-in user.
+ *
+ * @param {object} userData - The user data to simulate a logged-in user.
+ * @param {string} userData.uid - The unique identifier for the user.
+ * @param {string} userData.email - The email of the user.
+ * @param {string} userData.jwt - The JWT token for the user.
+ * @param {string} userData.loginMethod - The login method used by the user (e.g., 'google', 'form').
+ * @returns {object} - The configured Express application.
+ */
 const createAppWithUser = (userData) => {
   const app = express()
 

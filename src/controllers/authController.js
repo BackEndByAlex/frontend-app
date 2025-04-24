@@ -4,94 +4,35 @@ import fs from 'fs'
 
 const publicKey = fs.readFileSync('./public.pem')
 
-export const renderHome = (req, res) => {
-  res.render('home/index', {
-    user: req.session.user
-  })
-}
-
-export const renderRegister = (req, res) => {
-  res.render('users/register')
-}
-
-export const renderDashboard = (req, res) => {
-  const user = req.session?.user
-  if (!user) return res.redirect('/login')
-
-  res.render('dashboard/dashboard', { user })
-}
-
+/**
+ * Renders the login page for the user.
+ *
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
 export const renderLogin = (req, res) => {
   res.render('users/login')
 }
 
+/**
+ * Logs out the user by destroying the session and redirects to the home page.
+ *
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
 export const logout = (req, res) => {
   req.session.destroy(() => {
     res.redirect('/')
   })
 }
 
-export const getFirebaseConfig = (req, res) => {
-  res.json({
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID
-  })
-}
-
-export const handleFormRegistration = async (req, res) => {
-  const { firstName, lastName, email, confirmEmail, password, confirmPassword } = req.body
-
-  if (!firstName || !lastName || !email || !confirmEmail || !password || !confirmPassword) {
-    return res.render('users/register', {
-      error: 'Alla fält måste fyllas i'
-    })
-  }
-
-  if (email !== confirmEmail) {
-    return res.render('users/register', {
-      error: 'E-postadresserna matchar inte'
-    })
-  }
-
-  if (password !== confirmPassword) {
-    return res.render('users/register', {
-      error: 'Lösenorden matchar inte'
-    })
-  }
-
-  try {
-    const response = await fetch('http://localhost:4000/api/v1/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName, lastName, email, password })
-    })
-
-    const contentType = response.headers.get('content-type')
-    if (!contentType || !contentType.includes('application/json')) {
-      throw new Error('Svar från auth-service är inte JSON')
-    }
-
-    const data = await response.json()
-
-    if (!response.ok) {
-      return res.render('users/register', {
-        error: data.message || 'Registrering misslyckades'
-      })
-    }
-
-    return res.redirect('/login')
-  } catch (err) {
-    console.error('Fel vid registrering:', err)
-    return res.render('users/register', {
-      error: 'Kunde inte kontakta auth-service'
-    })
-  }
-}
-
+/**
+ * Handles Google login by proxying the request to the auth-service,
+ * verifying the token, saving user data in the session, and sending a verification code.
+ *
+ * @param {object} req - The request object containing the ID token in the body.
+ * @param {object} res - The response object used to redirect or render views.
+ */
 export const handleGoogleLoginProxy = async (req, res) => {
   try {
     // 1. Logga in via auth-service
@@ -128,6 +69,14 @@ export const handleGoogleLoginProxy = async (req, res) => {
   }
 }
 
+/**
+ * Handles form-based login by sending credentials to the auth-service,
+ * verifying the token, saving user data in the session, and sending a verification code.
+ *
+ * @param {object} req - The request object containing the login credentials in the body.
+ * @param {object} res - The response object used to render views or redirect.
+ * @returns {Promise<void>} - A promise that resolves when the response is sent.
+ */
 export const handleFormLogin = async (req, res) => {
   try {
     // 1. Skicka login-data till auth-service

@@ -5,12 +5,20 @@ import {
   signInWithPopup
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js'
 
-async function getFirebaseConfig() {
+/**
+ * Fetches the Firebase configuration from the server.
+ *
+ * @returns {Promise<object>} A promise that resolves to the Firebase configuration object.
+ */
+async function getFirebaseConfig () {
   const res = await fetch('/firebase-config')
   return await res.json()
 }
 
-async function main() {
+/**
+ * Initializes the Firebase app and sets up Google login functionality.
+ */
+async function main () {
   const firebaseConfig = await getFirebaseConfig()
   const app = initializeApp(firebaseConfig)
   const auth = getAuth(app)
