@@ -1,5 +1,5 @@
 .hero {
-  min-height: 100vh;
+  min-height: 80vh;
   background: url('/img/Background.png') center/cover no-repeat;
   position: relative;
   display: flex;
