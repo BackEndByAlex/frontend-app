@@ -27,49 +27,6 @@ export const logout = (req, res) => {
 }
 
 /**
- * Handles Google login by proxying the request to the auth-service,
- * verifying the token, saving user data in the session, and sending a verification code.
- *
- * @param {object} req - The request object containing the ID token in the body.
- * @param {object} res - The response object used to redirect or render views.
- */
-export const handleGoogleLoginProxy = async (req, res) => {
-  try {
-    // 1. Logga in via auth-service
-    const apiRes = await fetch('http://localhost:4000/api/v1/google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken: req.body.idToken }),
-      credentials: 'include'
-    })
-
-    if (!apiRes.ok) throw new Error('Auth-service rejected token.')
-
-    const { token } = await apiRes.json()
-    const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
-
-    // 2. Spara JWT + användardata i session
-    req.session.user = {
-      ...payload,
-      jwt: token
-    }
-
-    // 3. Skicka verifieringskod till användarens mail
-    await fetch('http://localhost:4000/api/v1/send-verification-code/google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken: req.body.idToken })
-    })
-
-    // 4. Gå vidare till dashboard
-    res.redirect('/dashboard')
-  } catch (err) {
-    console.error('Proxy login failed:', err)
-    res.redirect('/login')
-  }
-}
-
-/**
  * Handles form-based login by sending credentials to the auth-service,
  * verifying the token, saving user data in the session, and sending a verification code.
  *
@@ -125,5 +82,77 @@ export const handleFormLogin = async (req, res) => {
     res.render('users/login', {
       error: 'Något gick fel. Försök igen senare.'
     })
+  }
+}
+
+/**
+ * Authenticates a Google user by sending the ID token to the auth-service
+ * and verifying the returned JWT.
+ *
+ * @param {string} idToken - The ID token from Google.
+ * @returns {Promise<{token: string, payload: object}>} - The verified JWT and its payload.
+ * @throws {Error} - If the auth-service rejects the token.
+ */
+async function authenticateGoogleUser (idToken) {
+  const response = await fetch('http://localhost:4000/api/v1/google', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken }),
+    credentials: 'include'
+  })
+
+  if (!response.ok) throw new Error('Auth-service rejected token.')
+
+  const { token } = await response.json()
+  const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
+
+  return { token, payload }
+}
+
+/**
+ * Stores user information in the session.
+ *
+ * @param {object} req - The request object.
+ * @param {object} payload - The payload containing user data.
+ * @param {string} token - The JWT token.
+ */
+function storeUserSession (req, payload, token) {
+  req.session.user = {
+    ...payload,
+    jwt: token
+  }
+}
+
+/**
+ * Sends a verification code to the user and redirects to the dashboard.
+ *
+ * @param {object} req - The request object containing the ID token in the body.
+ * @param {object} res - The response object used to redirect.
+ */
+async function sendVerificationCodeAndRedirect (req, res) {
+  await fetch('http://localhost:4000/api/v1/send-verification-code/google', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken: req.body.idToken })
+  })
+
+  res.redirect('/dashboard')
+}
+
+/**
+ * Handles Google login by authenticating the user, storing session data,
+ * and sending a verification code before redirecting to the dashboard.
+ *
+ * @param {object} req - The request object containing the ID token in the body.
+ * @param {object} res - The response object used to redirect or render views.
+ */
+export const handleGoogleLoginProxy = async (req, res) => {
+  try {
+    const { token, payload } = await authenticateGoogleUser(req.body.idToken)
+    storeUserSession(req, payload, token)
+    await sendVerificationCodeAndRedirect(req, res)
+  } catch (err) {
+    console.error('Proxy login failed:', err)
+    res.redirect('/login')
   }
 }
