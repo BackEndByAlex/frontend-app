@@ -37,6 +37,13 @@ export const renderDashboard = (req, res) => {
   })
 }
 
+/**
+ * Handles the verification of a code.
+ *
+ * @param {object} req - The request object containing the code in the body.
+ * @param {object} res - The response object used to redirect the user.
+ * @returns {Promise<void>} Redirects to the dashboard page after processing.
+ */
 export const postVerifyCode = async (req, res) => {
   try {
     const { code } = req.body

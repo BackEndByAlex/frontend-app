@@ -1,4 +1,5 @@
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js'
+import { fetchFirebaseConfig } from './api.js'
 
 /**
  * Fetches the Firebase configuration and initializes the Firebase app.
@@ -6,8 +7,7 @@ import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.
  * @returns {Promise<object>} The initialized Firebase app instance.
  */
 export async function getFirebaseApp () {
-  const res = await fetch('/firebase-config')
-  const firebaseConfig = await res.json()
+  const firebaseConfig = await fetchFirebaseConfig()
 
   return getApps().length === 0
     ? initializeApp(firebaseConfig)
