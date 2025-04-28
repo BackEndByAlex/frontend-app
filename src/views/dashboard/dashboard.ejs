@@ -1,13 +1,27 @@
 <link rel="stylesheet" href="css/dashboard.css">
 
-<h1>Welcome <%= user?.name %></h1>
+<div class="dashboard-page">
+  <%- include('../partials/flashmeddelande') %>
 
-<h2>Verifiera kod från mejlet</h2>
-<% if (!codeSuccess) { %>
-  <form action="/verify-code" method="POST">
-    <input type="text" name="code" placeholder="Skriv in din kod här" required />
-    <button type="submit">Verifiera kod</button>
-  </form>
-<% } else { %>
-  <p style="color: green;">Koden är verifierad ✅</p>
-<% } %>
+  <h1>Välkommen, <%= user?.name %> 👋</h1>
+
+  <div class="dashboard-section">
+    <% if (!isCodeVerified) { %>
+      <h2>Verifiera din kod</h2>
+      <form action="/verify-code" method="POST" class="verify-form">
+        <input type="text" name="code" placeholder="Ange din kod här" required />
+        <button type="submit" class="btn-primary">Verifiera</button>
+      </form>
+    <% } else { %>
+      <h2>Generera ett säkert lösenord</h2>
+      <div class="password-generator">
+        <input type="text" id="generated-password" readonly placeholder="Här kommer ditt lösenord..." />
+        <div class="password-buttons">
+          <button id="generate-password" class="btn-primary">Generera lösenord</button>
+          <button id="copy-password" class="btn-secondary">Kopiera lösenord</button>
+          <button id="save-password" class="btn-success">Spara lösenord</button>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>

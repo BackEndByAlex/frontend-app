@@ -20,5 +20,11 @@ export function validateRegisterForm ({ firstName, lastName, email, confirmEmail
   if (password !== confirmPassword) {
     return 'Lösenorden matchar inte'
   }
-  return null // Om allt är okej
+
+  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!§()_?]).{12,}$/
+  if (!strongPasswordRegex.test(password)) {
+    return 'Lösenordet måste vara minst 12 tecken långt och innehålla minst en liten bokstav, en stor bokstav, en siffra och ett specialtecken.'
+  }
+
+  return null
 }

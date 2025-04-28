@@ -1,5 +1,6 @@
 import { validateRegisterForm } from '../validators/registerValidator.js'
 import { registerUser } from '../services/registrationService.js'
+import { logger } from '../config/winston.js'
 
 /**
  * Renders the registration page for users.
@@ -22,13 +23,17 @@ export const renderRegister = (req, res) => {
 export const handleFormRegistration = async (req, res) => {
   const validationError = validateRegisterForm(req.body)
   if (validationError) {
-    return res.render('users/register', { error: validationError })
+    req.flash('error', validationError)
+    return res.redirect('/register')
   }
 
   try {
     await registerUser(req.body)
+    req.flash('success', 'Registreringen lyckades! Du kan nu logga in.')
     return res.redirect('/login')
   } catch (err) {
-    return res.render('users/register', { error: err.message || 'Registrering misslyckades' })
+    logger.error('[REGISTER ERROR]', { error: err })
+    req.flash('error', err.message || 'Kunde inte registrera dig. Försök igen senare.')
+    return res.redirect('/register')
   }
 }

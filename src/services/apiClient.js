@@ -1,3 +1,5 @@
+import { logger } from '../config/winston.js'
+
 /**
  * Fetches the Firebase configuration from the backend API.
  *
@@ -29,14 +31,18 @@ export async function verifyCodeFromAuthService (email, code, token) {
     })
 
     if (!res.ok) {
+      if (res.status === 404) {
+        // Specifikt fall: ogiltig kod
+        throw new Error('Ogiltig kod')
+      }
       const errorText = await res.text()
       throw new Error(`Fel vid verifiering: ${errorText}`)
     }
 
     return await res.json()
   } catch (error) {
-    console.error('[Fel vid verifiering]', error)
-    return { success: false, message: 'Något gick fel vid verifiering' }
+    logger.error('[VERIFY CODE API ERROR]', { error })
+    throw error
   }
 }
 
@@ -68,7 +74,7 @@ export async function postToAuthService (endpoint, body) {
 
     return data
   } catch (error) {
-    console.error(`[POST ${endpoint}]`, error)
+    logger.error(`[POST ${endpoint} SERVICE ERROR]`, { error })
     throw error
   }
 }

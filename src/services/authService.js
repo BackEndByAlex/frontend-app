@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import jwt from 'jsonwebtoken'
 import { postToAuthService } from './apiClient.js'
+import { logger } from '../config/winston.js'
 import fs from 'fs'
 
 const publicKey = fs.readFileSync('./public.pem')
@@ -12,10 +13,14 @@ const publicKey = fs.readFileSync('./public.pem')
  * @returns {object} - The session user data.
  */
 export async function loginWithForm (credentials) {
-  const { token } = await postToAuthService('login', credentials)
-  const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
-
-  return { payload, token }
+  try {
+    const { token } = await postToAuthService('login', credentials)
+    const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
+    return { payload, token }
+  } catch (error) {
+    logger.error('[LOGIN SERVICE ERROR]', { error })
+    throw new Error('Fel vid inloggning. Försök igen.')
+  }
 }
 
 /**
@@ -25,21 +30,26 @@ export async function loginWithForm (credentials) {
  * @returns {object} - The session user data.
  */
 export async function authenticateGoogleUser (idToken) {
-  const response = await fetch('http://localhost:4000/api/v1/google', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ idToken }),
-    credentials: 'include'
-  })
+  try {
+    const response = await fetch('http://localhost:4000/api/v1/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken }),
+      credentials: 'include'
+    })
 
-  if (!response.ok) {
-    throw new Error('Auth-service rejected Google token.')
+    if (!response.ok) {
+      throw new Error('Auth-service rejected Google token.')
+    }
+
+    const { token } = await response.json()
+    const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
+
+    return { payload, token }
+  } catch (error) {
+    logger.error('[GOOGLE AUTH SERVICE ERROR]', { error })
+    throw new Error('Google-inloggning misslyckades. Försök igen.')
   }
-
-  const { token } = await response.json()
-  const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
-
-  return { payload, token }
 }
 
 /**
@@ -49,14 +59,19 @@ export async function authenticateGoogleUser (idToken) {
  * @returns {Promise<void>}
  */
 export async function sendVerificationCode (idToken) {
-  const response = await fetch('http://localhost:4000/api/v1/send-verification-code/google', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ idToken })
-  })
+  try {
+    const response = await fetch('http://localhost:4000/api/v1/send-verification-code/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken })
+    })
 
-  if (!response.ok) {
-    throw new Error('Kunde inte skicka verifieringskod.')
+    if (!response.ok) {
+      throw new Error('Kunde inte skicka verifieringskod via Google.')
+    }
+  } catch (error) {
+    logger.error('[SEND VERIFICATION CODE GOOGLE ERROR]', { error })
+    throw error
   }
 }
 
@@ -67,15 +82,20 @@ export async function sendVerificationCode (idToken) {
  * @returns {Promise<void>}
  */
 export async function sendVerificationCodeAfterLogin (token) {
-  const response = await fetch('http://localhost:4000/api/v1/send-verification-code', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
-  })
+  try {
+    const response = await fetch('http://localhost:4000/api/v1/send-verification-code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    })
 
-  if (!response.ok) {
-    throw new Error('Kunde inte skicka verifieringskod efter login.')
+    if (!response.ok) {
+      throw new Error('Kunde inte skicka verifieringskod efter login.')
+    }
+  } catch (error) {
+    logger.error('[SEND VERIFICATION CODE LOGIN ERROR]', { error })
+    throw error
   }
 }

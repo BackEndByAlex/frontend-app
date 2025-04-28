@@ -1,4 +1,5 @@
 import { verifyCodeFromAuthService } from '../services/apiClient.js'
+import { logger } from '../config/winston.js'
 
 /**
  * Renders the home page.
@@ -22,18 +23,17 @@ export const renderHome = (req, res) => {
  */
 export const renderDashboard = (req, res) => {
   const user = req.session.user
-  if (!user) return res.redirect('/login')
 
-  const codeSuccess = req.session.codeSuccess
-  const codeError = req.session.codeError
+  if (!user) {
+    req.flash('error', 'Du måste logga in först.')
+    return res.redirect('/login')
+  }
 
-  req.session.codeSuccess = null
-  req.session.codeError = null
+  const isCodeVerified = req.session.isCodeVerified || false
 
   res.render('dashboard/dashboard', {
     user,
-    codeSuccess,
-    codeError
+    isCodeVerified
   })
 }
 
@@ -50,15 +50,22 @@ export const postVerifyCode = async (req, res) => {
     const token = req.session.user?.jwt
     const user = req.session.user?.email
 
-    await verifyCodeFromAuthService(user, code, token)
+    try {
+      await verifyCodeFromAuthService(user, code, token)
 
-    req.session.codeSuccess = 'Koden har verifierats!'
-    req.session.codeError = 'Koden är felaktig!'
-
-    return res.redirect('/dashboard')
+      req.session.isCodeVerified = true
+      req.flash('success', 'Koden har verifierats!')
+      return res.redirect('/dashboard')
+    } catch (err) {
+      logger.error('[VERIFICATION ERROR]', { error: err })
+      req.session.isCodeVerified = false
+      req.flash('error', 'Ogiltig kod. Försök igen.')
+      return res.redirect('/dashboard')
+    }
   } catch (err) {
-    console.error('[Fel vid verifiering]', err.message)
-    req.session.codeError = 'Något gick fel vid verifiering'
+    logger.error('[VERIFICATION ERROR]', { error: err })
+    req.session.isCodeVerified = false
+    req.flash('error', 'Fel vid verifiering av kod. Försök igen.')
     return res.redirect('/dashboard')
   }
 }

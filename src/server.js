@@ -7,72 +7,84 @@
 
 import express from 'express'
 import expressLayouts from 'express-ejs-layouts'
+import dotenv from 'dotenv'
 import logger from 'morgan'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { router as routes } from './routes/pageRoutes.js'
 import session from 'express-session'
-import 'dotenv/config'
+import { router as routes } from './routes/pageRoutes.js'
+import { sessionOptions } from './config/sessionOptions.js'
 
-import dotenv from 'dotenv'
+import flash from 'express-flash'
+import 'dotenv/config'
 
 dotenv.config()
 
-// Get the path of the current module's directory.
-const directoryFullName = dirname(fileURLToPath(import.meta.url))
+try {
+  // Get the path of the current module's directory.
+  const directoryFullName = dirname(fileURLToPath(import.meta.url))
 
-// Set the base URL to use for all relative URLs in a document.
-const baseURL = process.env.BASE_URL || '/'
+  // Set the base URL to use for all relative URLs in a document.
+  const baseURL = process.env.BASE_URL || '/'
 
-// Create Express application.
-const app = express()
-app.use(express.json())
+  // Create Express application.
+  const app = express()
+  app.use(express.json())
 
-// Set up a morgan logger using the dev format for log entries.
-app.use(logger('dev'))
+  // Set up a morgan logger using the dev format for log entries.
+  app.use(logger('dev'))
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || '3x@mpl3-§uper-S3cr3t-K3y!',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false
-  }
-}))
+  // 1. Session MÅSTE komma först
+  app.use(session(sessionOptions))
 
-// View engine setup.
-app.set('view engine', 'ejs')
-app.set('views', join(directoryFullName, 'views'))
-app.set('layout', join(directoryFullName, 'views', 'layouts', 'default'))
-app.set('layout extractScripts', true)
-app.set('layout extractStyles', true)
-app.use(expressLayouts)
+  // 2. SEN flash
+  app.use(flash())
 
-// Parse application/x-www-form-urlencoded.
-app.use(express.urlencoded({ extended: false }))
+  // 3. SEN middleware för att skicka vidare locals
+  app.use((req, res, next) => {
+    res.locals.successMessages = req.flash('success')
+    res.locals.errorMessages = req.flash('error')
+    res.locals.codeVerifiedMessages = req.flash('code-verified')
+    next()
+  })
 
-// Serve static files.
-app.use(express.static(join(directoryFullName, '..', 'public')))
+  // View engine setup.
+  app.set('view engine', 'ejs')
+  app.set('views', join(directoryFullName, 'views'))
+  app.set('layout', join(directoryFullName, 'views', 'layouts', 'default'))
+  app.set('layout extractScripts', true)
+  app.set('layout extractStyles', true)
+  app.use(expressLayouts)
 
-// Middleware to pass base URL to views.
-app.use((req, res, next) => {
-  res.locals.baseURL = baseURL
-  next()
-})
+  // Parse application/x-www-form-urlencoded.
+  app.use(express.urlencoded({ extended: false }))
 
-// Register routes.
-app.use('/', routes)
+  // Serve static files.
+  app.use(express.static(join(directoryFullName, '..', 'public')))
 
-// Error handler.
-app.use((err, req, res, next) => {
-  console.error(err)
-  res
-    .status(err.status || 500)
-    .send(err.message || 'Internal Server Error')
-})
+  // Middleware to pass base URL to views.
+  app.use((req, res, next) => {
+    res.locals.baseURL = baseURL
+    next()
+  })
 
-// Start the server.
-const server = app.listen(process.env.PORT, () => {
-  console.log(`Frontend running at http://localhost:${server.address().port}`)
-  console.log('Press Ctrl-C to terminate...')
-})
+  // Register routes.
+  app.use('/', routes)
+
+  // Error handler.
+  app.use((err, req, res, next) => {
+    console.error(err)
+    res
+      .status(err.status || 500)
+      .send(err.message || 'Internal Server Error')
+  })
+
+  // Start the server.
+  const server = app.listen(process.env.PORT, () => {
+    console.log(`Frontend running at http://localhost:${server.address().port}`)
+    console.log('Press Ctrl-C to terminate...')
+  })
+} catch (error) {
+  console.error('Error starting the server:', error)
+  process.exit(1) // Exit the process with a failure code
+}

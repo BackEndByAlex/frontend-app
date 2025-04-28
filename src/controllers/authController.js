@@ -1,4 +1,10 @@
-import { loginWithForm, sendVerificationCodeAfterLogin, authenticateGoogleUser, sendVerificationCode } from '../services/authService.js'
+import {
+  loginWithForm,
+  sendVerificationCodeAfterLogin,
+  authenticateGoogleUser,
+  sendVerificationCode
+} from '../services/authService.js'
+import { logger } from '../config/winston.js'
 
 /**
  * Renders the login page for the user.
@@ -39,16 +45,14 @@ export const handleFormLogin = async (req, res) => {
       jwt: token
     }
 
+    req.session.isCodeVerified = false
     await sendVerificationCodeAfterLogin(token)
-
+    req.flash('success', 'Inloggning lyckades! En verifieringskod har skickats till din e-post.')
     res.redirect('/dashboard')
   } catch (err) {
-    console.error('[LOGIN] Fel vid inloggning:', err)
-    req.session.destroy(() => {
-      res.render('users/login', {
-        error: err.message || 'Något gick fel. Försök igen senare.'
-      })
-    })
+    logger.error('[LOGIN ERROR]', { error: err })
+    req.flash('error', 'Fel vid inloggning. Kontrollera dina uppgifter.')
+    res.redirect('/login')
   }
 }
 
@@ -68,11 +72,15 @@ export const handleGoogleLoginProxy = async (req, res) => {
       jwt: token
     }
 
+    req.session.isCodeVerified = false
+
     await sendVerificationCode(req.body.idToken)
 
+    req.flash('success', 'Google-inloggning lyckades! En verifieringskod har skickats till din e-post.')
     res.redirect('/dashboard')
   } catch (err) {
-    console.error('Proxy login failed:', err)
+    logger.error('[GOOGLE LOGIN ERROR]', { error: err })
+    req.flash('error', 'Google-inloggning misslyckades. Försök igen.')
     res.redirect('/login')
   }
 }

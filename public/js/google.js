@@ -5,10 +5,10 @@ import {
   signInWithPopup
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js'
 import { fetchFirebaseConfig } from './api.js'
-import { onDomReady, postJson } from './utils.js'
+import { onDomReady } from './utils.js'
 
 /**
- * Initializes the Firebase app and sets up Google login functionality.
+ * Main function to initialize Firebase and set up Google login.
  */
 async function main () {
   const firebaseConfig = await fetchFirebaseConfig()
@@ -24,15 +24,23 @@ async function main () {
       const result = await signInWithPopup(auth, provider)
       const idToken = await result.user.getIdToken()
 
-      const res = await postJson('/auth/google', { idToken })
+      // Skapa ett dolt formulär och posta till servern!
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = '/auth/google'
 
-      if (!res.ok) throw new Error('Login misslyckades')
-      window.location.href = '/dashboard'
+      const input = document.createElement('input')
+      input.type = 'hidden'
+      input.name = 'idToken'
+      input.value = idToken
+
+      form.appendChild(input)
+      document.body.appendChild(form)
+      form.submit() // Skickar till servern som POST
     } catch (err) {
       alert('Login misslyckades!')
     }
   })
 }
 
-// Kör först när DOM är laddad
 onDomReady(main)
