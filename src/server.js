@@ -18,7 +18,6 @@ import { sessionOptions } from './config/sessionOptions.js'
 import rateLimit from 'express-rate-limit'
 import flash from 'express-flash'
 import csurf from 'csurf'
-import 'dotenv/config'
 
 dotenv.config()
 
@@ -31,66 +30,75 @@ try {
 
   // Create Express application.
   const app = express()
-  app.use(express.json())
-  app.use(helmet()) // Use Helmet for security headers
 
-  // Set up a morgan logger using the dev format for log entries.
+  // 1. Security headers
+  app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          'https://www.gstatic.com', // <-- lägg till denna!
+          'https://www.googleapis.com'
+        ],
+        styleSrc: ["'self'", 'https:'],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: [
+          "'self'",
+          'https://www.gstatic.com',
+          'https://securetoken.googleapis.com',
+          'https://identitytoolkit.googleapis.com'
+        ],
+        frameSrc: ["'self'"]
+      }
+    })
+  )
+
+  // log requests to the console.
   app.use(logger('dev'))
 
-  // 1. Session MÅSTE komma först
+  // 2. Body parsing BEFORE csrf!
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: false }))
+
+  // 3. Session setup
   app.use(session(sessionOptions))
 
-  // 2. SEN flash
+  // 4. Flash messages
   app.use(flash())
 
-  // 3. SEN middleware för att skicka vidare locals
+  // 5. Flash messages available to views
   app.use((req, res, next) => {
     res.locals.successMessages = req.flash('success')
     res.locals.errorMessages = req.flash('error')
     res.locals.codeVerifiedMessages = req.flash('code-verified')
     next()
   })
-  const csrfProtection = csurf({ cookie: false })
 
+  // 6. CSRF protection, skip API and Google login
+  const csrfProtection = csurf({ cookie: false })
   app.use((req, res, next) => {
     if (
       req.path.startsWith('/api/') ||
       req.path.startsWith('/auth/google') ||
-      req.path.startsWith('/firebase-config')
+      req.path.startsWith('/firebase-config') ||
+      req.path === '/favicon.ico'
     ) {
       return next()
     }
     csrfProtection(req, res, next)
   })
 
+  // 7. Attach csrfToken to all views
   app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken ? req.csrfToken() : null
     next()
   })
 
-  // View engine setup.
-  app.set('view engine', 'ejs')
-  app.set('views', join(directoryFullName, 'views'))
-  app.set('layout', join(directoryFullName, 'views', 'layouts', 'default'))
-  app.set('layout extractScripts', true)
-  app.set('layout extractStyles', true)
-  app.use(expressLayouts)
-
-  // Parse application/x-www-form-urlencoded.
-  app.use(express.urlencoded({ extended: false }))
-
-  // Serve static files.
+  // 8. Static files
   app.use(express.static(join(directoryFullName, '..', 'public')))
 
-  // Middleware to pass base URL to views.
-  app.use((req, res, next) => {
-    res.locals.baseURL = baseURL
-    next()
-  })
-
-  // Register routes.
-  app.use('/', routes)
-
+  // 9. Rate limiter BEFORE routes
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minuter
     max: 100, // max 100 requests per 15 min
@@ -98,7 +106,24 @@ try {
   })
   app.use(limiter)
 
-  // Error handler.
+  // 10. View engine and layouts
+  app.set('view engine', 'ejs')
+  app.set('views', join(directoryFullName, 'views'))
+  app.set('layout', join(directoryFullName, 'views', 'layouts', 'default'))
+  app.set('layout extractScripts', true)
+  app.set('layout extractStyles', true)
+  app.use(expressLayouts)
+
+  // 11. Middleware to pass base URL to views
+  app.use((req, res, next) => {
+    res.locals.baseURL = baseURL
+    next()
+  })
+
+  // 12. Register routes
+  app.use('/', routes)
+
+  // 13. Error handler
   app.use((err, req, res, next) => {
     console.error(err)
     res
