@@ -11,11 +11,13 @@ import dotenv from 'dotenv'
 import logger from 'morgan'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import helmet from 'helmet'
 import session from 'express-session'
 import { router as routes } from './routes/pageRoutes.js'
 import { sessionOptions } from './config/sessionOptions.js'
-
+import rateLimit from 'express-rate-limit'
 import flash from 'express-flash'
+import csurf from 'csurf'
 import 'dotenv/config'
 
 dotenv.config()
@@ -30,6 +32,7 @@ try {
   // Create Express application.
   const app = express()
   app.use(express.json())
+  app.use(helmet()) // Use Helmet for security headers
 
   // Set up a morgan logger using the dev format for log entries.
   app.use(logger('dev'))
@@ -45,6 +48,23 @@ try {
     res.locals.successMessages = req.flash('success')
     res.locals.errorMessages = req.flash('error')
     res.locals.codeVerifiedMessages = req.flash('code-verified')
+    next()
+  })
+  const csrfProtection = csurf({ cookie: false })
+
+  app.use((req, res, next) => {
+    if (
+      req.path.startsWith('/api/') ||
+      req.path.startsWith('/auth/google') ||
+      req.path.startsWith('/firebase-config')
+    ) {
+      return next()
+    }
+    csrfProtection(req, res, next)
+  })
+
+  app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken ? req.csrfToken() : null
     next()
   })
 
@@ -70,6 +90,13 @@ try {
 
   // Register routes.
   app.use('/', routes)
+
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minuter
+    max: 100, // max 100 requests per 15 min
+    message: 'För många förfrågningar från denna IP, försök igen senare.'
+  })
+  app.use(limiter)
 
   // Error handler.
   app.use((err, req, res, next) => {

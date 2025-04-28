@@ -24,17 +24,26 @@ async function main () {
       const result = await signInWithPopup(auth, provider)
       const idToken = await result.user.getIdToken()
 
+      // Hämta CSRF-token från DOM
+      const csrfToken = document.getElementById('csrfToken')?.value || ''
+
       // Skapa ett dolt formulär och posta till servern!
       const form = document.createElement('form')
       form.method = 'POST'
       form.action = '/auth/google'
 
-      const input = document.createElement('input')
-      input.type = 'hidden'
-      input.name = 'idToken'
-      input.value = idToken
+      const idTokenInput = document.createElement('input')
+      idTokenInput.type = 'hidden'
+      idTokenInput.name = 'idToken'
+      idTokenInput.value = idToken
 
-      form.appendChild(input)
+      const csrfInput = document.createElement('input')
+      csrfInput.type = 'hidden'
+      csrfInput.name = '_csrf'
+      csrfInput.value = csrfToken
+
+      form.appendChild(idTokenInput)
+      form.appendChild(csrfInput)
       document.body.appendChild(form)
       form.submit() // Skickar till servern som POST
     } catch (err) {
