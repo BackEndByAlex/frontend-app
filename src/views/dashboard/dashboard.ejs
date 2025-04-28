@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="css/dashboard.css">
+<script type="module" src="/js/password.js"></script>
 
 <div class="dashboard-page">
   <%- include('../partials/flashmeddelande') %>
@@ -40,7 +41,7 @@
         </div>
     
         <div class="password-buttons">
-          <button id="generate-password" class="btn-primary">Generera lösenord</button>
+          <button type="password" id="generate-password" class="btn-primary">Generera lösenord</button>
           <button id="save-password" class="btn-success">Spara lösenord</button>
         </div>
       </div>
