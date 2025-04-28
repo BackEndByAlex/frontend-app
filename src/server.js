@@ -76,7 +76,18 @@ try {
   })
 
   // 6. CSRF protection, skip API and Google login
-  const csrfProtection = csurf({ cookie: false })
+  const csrfProtection = csurf({
+    cookie: false,
+    /**
+     * Extracts the CSRF token from the request body, query, or headers.
+     *
+     * @param {object} req - The Express request object.
+     * @returns {string|undefined} The CSRF token if found, otherwise undefined.
+     */
+    value: (req) => {
+      return req.body?._csrf || req.query?._csrf || req.headers['csrf-token']
+    }
+  })
   app.use((req, res, next) => {
     if (
       req.path.startsWith('/api/') ||

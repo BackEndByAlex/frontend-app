@@ -1,6 +1,6 @@
 import { getFirebaseApp } from './FirebaseClient.js'
 import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js'
-import { onDomReady, postJson } from './utils.js'
+import { onDomReady } from './utils.js'
 
 onDomReady(async () => {
   const logoutForm = document.querySelector('#logout-form')
@@ -15,12 +15,7 @@ onDomReady(async () => {
 
       await signOut(auth)
 
-      const res = await postJson('/logout', {})
-      if (res.ok) {
-        window.location.href = '/'
-      } else {
-        alert('Kunde inte logga ut från servern')
-      }
+      logoutForm.submit()
     })
   } catch (err) {
     console.error('Logout failed:', err)

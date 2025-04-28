@@ -13,7 +13,7 @@
       <% if (typeof user !== 'undefined' && user) { %>
         <span class="welcome-text">Välkommen, <%= user.name %></span>
         <a href="/dashboard">Dashboard</a>
-        <form id="logout-form">
+        <form id="logout-form" method="POST" action="/logout">
           <input type="hidden" id="csrfToken" name="_csrf" value="<%= csrfToken %>">
           <button type="submit" class="btn-logout">Logga ut</button>
         </form>
