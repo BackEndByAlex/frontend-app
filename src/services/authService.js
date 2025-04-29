@@ -91,7 +91,12 @@ export async function sendVerificationCodeAfterLogin (token) {
       }
     })
 
+    const responseBody = await response.text() // läs svaret som text för debug
+
     if (!response.ok) {
+      logger.error('[SEND VERIFICATION CODE ERROR]')
+      logger.error('Status:', response.status)
+      logger.error('Response body:', responseBody)
       throw new Error('Kunde inte skicka verifieringskod efter login.')
     }
   } catch (error) {

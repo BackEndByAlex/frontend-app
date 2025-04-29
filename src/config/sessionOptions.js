@@ -17,7 +17,7 @@ export const sessionOptions = {
   resave: false, // Resave even if a request is not changing the session.
   saveUninitialized: false, // Don't save a created but not modified session.
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    maxAge: 1000 * 60 * 15, // 15 minutes 1000 * 60 * 15
     sameSite: 'lax', // Ändra till 'strict' om man vill ha striktare säkerhet.
     secure: false // Set to true if using https
   }

@@ -14,7 +14,8 @@ import {
 import {
   renderHome,
   renderDashboard,
-  postVerifyCode
+  postVerifyCode,
+  checkSession
 } from '../controllers/pageController.js'
 
 import { getFirebaseConfig } from '../controllers/fireBaseController.js'
@@ -26,10 +27,8 @@ export const router = express.Router()
 router.get('/', renderHome)
 router.get('/firebase-config', getFirebaseConfig)
 router.get('/register', renderRegister)
-router.get('/login', (req, res, next) => {
-  res.locals.csrfToken = req.csrfToken()
-  next()
-}, renderLogin)
+router.get('/login', renderLogin)
+router.get('/check-session', checkSession)
 
 router.get('/dashboard', requireAuth, renderDashboard)
 router.get('/generate-password', generatePassword)

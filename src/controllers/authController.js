@@ -13,6 +13,7 @@ import { logger } from '../config/winston.js'
  * @param {object} res - The response object.
  */
 export const renderLogin = (req, res) => {
+  res.locals.csrfToken = req.csrfToken()
   res.render('users/login')
 }
 
@@ -23,7 +24,12 @@ export const renderLogin = (req, res) => {
  * @param {object} res - The response object.
  */
 export const logout = (req, res) => {
-  req.session.destroy(() => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Session destruction failed:', err)
+      return res.status(500).json({ message: 'Logout failed' })
+    }
+    res.clearCookie('connect.sid')
     res.redirect('/')
   })
 }
@@ -38,7 +44,15 @@ export const logout = (req, res) => {
  */
 export const handleFormLogin = async (req, res) => {
   try {
+    if (!req.session) {
+      logger.info('[LOGIN ERROR] No active session found.')
+      req.flash('error', 'Inloggningen misslyckades, vänligen försök igen.')
+      return res.redirect('/login')
+    }
+
     const { payload, token } = await loginWithForm(req.body)
+
+    console.log('DEBUG: New login token:', token)
 
     req.session.user = {
       ...payload,
