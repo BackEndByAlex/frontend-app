@@ -41,10 +41,17 @@
           </div>
         </div>
     
-        <div class="password-buttons">
-          <button type="password" id="generate-password" class="btn-primary">Generera lösenord</button>
-          <button id="save-password" class="btn-success">Spara lösenord</button>
-        </div>
+        <form id="save-password-form" action="/save-password" method="POST" class="save-password-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="text" name="service" placeholder="Tjänstens namn" required>
+          <input type="text" name="username" placeholder="Användarnamn för tjänsten" required>
+          <input type="text" id="generated-password" name="password" placeholder="Här kommer ditt lösenord..." required>
+        
+          <div class="password-buttons">
+            <button type="password" id="generate-password" class="btn-primary">Generera lösenord</button>
+            <button type="submit" class="btn-success">Spara lösenord</button>
+          </div>
+        </form>
       </div>
     </div>       
   <% } %>
