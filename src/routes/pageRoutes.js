@@ -13,9 +13,9 @@ import {
 
 import {
   renderHome,
-  renderDashboard,
   postVerifyCode,
-  checkSession
+  checkSession,
+  renderSmartDashboard
 } from '../controllers/pageController.js'
 
 import { getFirebaseConfig } from '../controllers/fireBaseController.js'
@@ -31,7 +31,7 @@ router.get('/register', renderRegister)
 router.get('/login', renderLogin)
 router.get('/check-session', checkSession)
 
-router.get('/dashboard', requireAuth, renderDashboard)
+router.get('/dashboard', requireAuth, renderSmartDashboard)
 router.get('/generate-password', generatePassword)
 
 router.post('/register', handleFormRegistration)

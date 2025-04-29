@@ -1,4 +1,4 @@
-import { verifyCodeFromAuthService } from '../services/apiClient.js'
+import { verifyCodeFromAuthService, getFromPasswordService } from '../services/apiClient.js'
 import { logger } from '../config/winston.js'
 
 /**
@@ -96,4 +96,46 @@ export const renderVerifyCodePage = (req, res) => {
     title: 'Verifiera din kod',
     csrfToken: req.csrfToken()
   })
+}
+
+/**
+ * Renders the password page with saved passwords.
+ *
+ * @param {object} req - The request object containing session data.
+ * @param {object} res - The response object used to render the page.
+ * @returns {Promise<void>} Renders the dashboard with passwords.
+ */
+export const renderPassword = async (req, res) => {
+  const token = req.session.user?.jwt
+  let passwords = []
+
+  try {
+    passwords = await getFromPasswordService('passwords', token)
+  } catch (err) {
+    console.error('[FETCH PASSWORDS ERROR]', err)
+    req.flash('error', 'Kunde inte hämta sparade lösenord.')
+  }
+
+  res.render('dashboard/dashboard', {
+    user: req.session.user,
+    csrfToken: req.csrfToken(),
+    passwords,
+    isCodeVerified: req.session.isCodeVerified
+  })
+}
+
+/**
+ * Renders the appropriate dashboard based on code verification status.
+ *
+ * @param {object} req - The request object containing session data.
+ * @param {object} res - The response object used to render the page.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>} Renders the dashboard or password page.
+ */
+export const renderSmartDashboard = (req, res, next) => {
+  if (req.session.isCodeVerified) {
+    return renderPassword(req, res, next)
+  } else {
+    return renderDashboard(req, res, next)
+  }
 }

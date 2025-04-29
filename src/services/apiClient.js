@@ -105,3 +105,27 @@ export async function postToPasswordService (endpoint, body, token) {
 
   return data
 }
+
+/**
+ * Sends a GET request to the password-service.
+ *
+ * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'user-info').
+ * @param {string} token - The authorization token.
+ * @returns {Promise<object>} - The response data.
+ */
+export async function getFromPasswordService (endpoint, token) {
+  const res = await fetch(`http://localhost:4001/api/v1/${endpoint}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+
+  const data = await res.json()
+
+  if (!res.ok) {
+    throw new Error(data.message || 'Fel vid hämtning från password-service')
+  }
+
+  return data
+}

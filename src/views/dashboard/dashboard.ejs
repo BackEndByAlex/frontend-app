@@ -43,17 +43,45 @@
     
         <form id="save-password-form" action="/save-password" method="POST" class="save-password-form">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        
           <input type="text" name="service" placeholder="Tjänstens namn" required>
           <input type="text" name="username" placeholder="Användarnamn för tjänsten" required>
-          <input type="text" id="generated-password" name="password" placeholder="Här kommer ditt lösenord..." required>
+        
+          <input type="text" id="password-field" name="password" placeholder="Här kommer ditt lösenord..." required>
         
           <div class="password-buttons">
-            <button type="password" id="generate-password" class="btn-primary">Generera lösenord</button>
+            <button type="button" id="generate-password" class="btn-primary">Generera lösenord</button>
             <button type="submit" class="btn-success">Spara lösenord</button>
           </div>
         </form>
       </div>
     </div>       
   <% } %>
+  <% if (typeof passwords !== 'undefined' && passwords.length > 0) { %>
+    <div class="saved-passwords">
+      <h3>Sparade lösenord</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Tjänst</th>
+            <th>Användarnamn</th>
+            <th>Lösenord</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% passwords.forEach(entry => { %>
+            <tr>
+              <td><%= entry.service %></td>
+              <td><%= entry.username %></td>
+              <td><%= entry.password %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else if (isCodeVerified) { %>
+    <p>Inga sparade lösenord ännu.</p>
+  <% } %>  
 </div>
+
 
