@@ -26,7 +26,10 @@ export const router = express.Router()
 router.get('/', renderHome)
 router.get('/firebase-config', getFirebaseConfig)
 router.get('/register', renderRegister)
-router.get('/login', renderLogin)
+router.get('/login', (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken()
+  next()
+}, renderLogin)
 
 router.get('/dashboard', requireAuth, renderDashboard)
 router.get('/generate-password', generatePassword)

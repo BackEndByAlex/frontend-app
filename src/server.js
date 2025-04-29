@@ -38,8 +38,9 @@ try {
         defaultSrc: ["'self'"],
         scriptSrc: [
           "'self'",
-          'https://www.gstatic.com', // <-- lägg till denna!
-          'https://www.googleapis.com'
+          'https://www.gstatic.com',
+          'https://www.googleapis.com',
+          'https://apis.google.com'
         ],
         styleSrc: ["'self'", 'https:'],
         imgSrc: ["'self'", 'data:', 'https:'],
@@ -49,7 +50,11 @@ try {
           'https://securetoken.googleapis.com',
           'https://identitytoolkit.googleapis.com'
         ],
-        frameSrc: ["'self'"]
+        frameSrc: [
+          "'self'",
+          'https://*.firebaseapp.com',
+          'https://*.google.com'
+        ]
       }
     })
   )
@@ -102,7 +107,9 @@ try {
 
   // 7. Attach csrfToken to all views
   app.use((req, res, next) => {
-    res.locals.csrfToken = req.csrfToken ? req.csrfToken() : null
+    if (req.csrfToken) {
+      res.locals.csrfToken = req.csrfToken()
+    }
     next()
   })
 

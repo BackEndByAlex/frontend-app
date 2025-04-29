@@ -18,10 +18,17 @@ export const sessionOptions = {
   saveUninitialized: false, // Don't save a created but not modified session.
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // 1 day
-    sameSite: 'strict'
+    sameSite: 'lax', // Ändra till 'strict' om man vill ha striktare säkerhet.
+    secure: false // Set to true if using https
   }
 }
 
-if (process.env.NODE_ENV === 'production') {
-  sessionOptions.cookie.secure = true // serve secure cookies
-}
+// if (process.env.NODE_ENV === 'production') {
+//   sessionOptions.cookie.secure = true // serve secure cookies
+// }
+
+// Ändra secure till true när du kör i produktion och har HTTPS aktiverat, samt
+// sätt NODE_ENV till 'production' i miljövariabel för att aktivera det när
+// du kör i produktion.
+// Om man kör i utvecklingsläge (localhost) kan
+// man sätta secure till false för att undvika problem med cookies.
