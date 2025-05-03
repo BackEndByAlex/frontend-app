@@ -9,6 +9,7 @@ import { logger } from '../config/winston.js'
  */
 export const renderHome = (req, res) => {
   res.render('home/index', {
+    title: 'Home',
     user: req.session.user
   })
 }
@@ -26,7 +27,7 @@ export const renderDashboard = (req, res) => {
 
   if (!user) {
     req.flash('error', 'Du måste logga in först.')
-    return res.redirect('/login')
+    return res.redirect('./')
   }
 
   const isCodeVerified = req.session.isCodeVerified || false
@@ -45,28 +46,21 @@ export const renderDashboard = (req, res) => {
  * @returns {Promise<void>} Redirects to the dashboard page after processing.
  */
 export const postVerifyCode = async (req, res) => {
+  const { code } = req.body
+  const token = req.session.user?.jwt
+  const email = req.session.user?.email
+
   try {
-    const { code } = req.body
-    const token = req.session.user?.jwt
-    const user = req.session.user?.email
+    await verifyCodeFromAuthService(email, code, token)
 
-    try {
-      await verifyCodeFromAuthService(user, code, token)
-
-      req.session.isCodeVerified = true
-      req.flash('success', 'Koden har verifierats!')
-      return res.redirect('/dashboard')
-    } catch (err) {
-      logger.error('[VERIFICATION ERROR]', { error: err })
-      req.session.isCodeVerified = false
-      req.flash('error', 'Ogiltig kod. Försök igen.')
-      return res.redirect('/dashboard')
-    }
+    req.session.isCodeVerified = true
+    req.flash('success', 'Koden har verifierats!')
+    return res.redirect('./dashboard') //
   } catch (err) {
     logger.error('[VERIFICATION ERROR]', { error: err })
     req.session.isCodeVerified = false
-    req.flash('error', 'Fel vid verifiering av kod. Försök igen.')
-    return res.redirect('/dashboard')
+    req.flash('error', err.message || 'Fel vid verifiering.')
+    return res.redirect('./dashboard') // visa verifieringsformulär igen
   }
 }
 
@@ -79,6 +73,7 @@ export const postVerifyCode = async (req, res) => {
  */
 export const checkSession = (req, res) => {
   if (!req.session?.user) {
+    req.flash('error', 'Session expired')
     return res.status(401).json({ message: 'Session expired' })
   }
   req.flash('error', 'Session expired')

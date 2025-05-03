@@ -1,12 +1,12 @@
 setInterval(async () => {
   try {
-    const res = await fetch('/check-session', { credentials: 'include' })
+    const res = await fetch('./check-session', { credentials: 'include' })
     if (res.status === 401) {
-      alert('Du har blivit automatiskt utloggad.')
-      window.location.href = '/login'
+      req.flash('error', 'Session expired')
+      window.location.href = '/TimeLock/login/'
     }
   } catch (err) {
     console.error('Session check failed', err)
-    window.location.href = '/login'
+    window.location.href = '/TimeLock/login/'
   }
-}, 15 * 60 * 1000)
+}, 1000 * 60 * 15) // Check every 15 minutes

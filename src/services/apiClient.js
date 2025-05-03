@@ -6,7 +6,7 @@ import { logger } from '../config/winston.js'
  * @returns {Promise<object>} A promise that resolves to the Firebase configuration object.
  */
 export async function getFirebaseConfig () {
-  const response = await fetch('http://localhost:4000/api/v1/auth/firebase-config')
+  const response = await fetch('/api/v1/auth/firebase-config')
   const data = await response.json()
   return data.firebaseConfig
 }
@@ -21,7 +21,7 @@ export async function getFirebaseConfig () {
  */
 export async function verifyCodeFromAuthService (email, code, token) {
   try {
-    const res = await fetch('http://localhost:4000/api/v1/verify-code', {
+    const res = await fetch('http://auth:4000/api/v1/verify-code', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export async function verifyCodeFromAuthService (email, code, token) {
  */
 export async function postToAuthService (endpoint, body) {
   try {
-    const response = await fetch(`http://localhost:4000/api/v1/${endpoint}`, {
+    const response = await fetch(`http://auth:4000/api/v1/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
@@ -88,7 +88,7 @@ export async function postToAuthService (endpoint, body) {
  * @returns {Promise<object>} - The response data.
  */
 export async function postToPasswordService (endpoint, body, token) {
-  const response = await fetch(`http://localhost:4001/api/v1/${endpoint}`, {
+  const response = await fetch(`http://password:4001/api/v1/${endpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ export async function postToPasswordService (endpoint, body, token) {
  * @returns {Promise<object>} - The response data.
  */
 export async function getFromPasswordService (endpoint, token) {
-  const res = await fetch(`http://localhost:4001/api/v1/${endpoint}`, {
+  const res = await fetch(`http://password:4001/api/v1/${endpoint}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`

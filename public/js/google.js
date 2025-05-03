@@ -7,9 +7,6 @@ import {
 import { fetchFirebaseConfig } from './api.js'
 import { onDomReady } from './utils.js'
 
-/**
- * Main function to initialize Firebase and set up Google login.
- */
 async function main () {
   const firebaseConfig = await fetchFirebaseConfig()
   const app = initializeApp(firebaseConfig)
@@ -24,30 +21,24 @@ async function main () {
       const result = await signInWithPopup(auth, provider)
       const idToken = await result.user.getIdToken()
 
-      // Hämta CSRF-token från DOM
       const csrfToken = document.getElementById('csrfToken')?.value || ''
 
-      // Skapa ett dolt formulär och posta till servern!
-      const form = document.createElement('form')
-      form.method = 'POST'
-      form.action = '/auth/google'
+      const proxyResponse = await fetch('/TimeLock/google/proxy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'CSRF-Token': csrfToken
+        },
+        credentials: 'include',
+        body: JSON.stringify({ idToken })
+      })
 
-      const idTokenInput = document.createElement('input')
-      idTokenInput.type = 'hidden'
-      idTokenInput.name = 'idToken'
-      idTokenInput.value = idToken
+      if (!proxyResponse.ok) throw new Error('Proxy-login misslyckades')
 
-      const csrfInput = document.createElement('input')
-      csrfInput.type = 'hidden'
-      csrfInput.name = '_csrf'
-      csrfInput.value = csrfToken
-
-      form.appendChild(idTokenInput)
-      form.appendChild(csrfInput)
-      document.body.appendChild(form)
-      form.submit() // Skickar till servern som POST
+      window.location.href = '/TimeLock/dashboard'
     } catch (err) {
-      alert('Login misslyckades!')
+      console.error('[GOOGLE LOGIN ERROR]', err)
+      alert('Google-login misslyckades!')
     }
   })
 }
