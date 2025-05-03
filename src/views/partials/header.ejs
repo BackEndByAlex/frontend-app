@@ -1,10 +1,10 @@
-<link rel="stylesheet" href="css/header-footer.css">
-<script type="module" src="/js/logout.js"></script>
-<script type="module" src="/js/header.js"></script>
+<link rel="stylesheet" href="./css/header-footer.css">
+<script type="module" src="./js/logout.js"></script>
+<script type="module" src="./js/header.js"></script>
 <header class="site-header sticky-header">
   <div class="header-container">
     <div class="header-left">
-      <a href="/" class="brand-logo">🔐 TimeLock</a>
+      <a href="./" class="brand-logo">🔐 TimeLock</a>
     </div>
 
     <button class="menu-toggle" aria-label="Toggle menu">☰</button>
@@ -12,14 +12,14 @@
     <nav class="header-nav">
       <% if (typeof user !== 'undefined' && user) { %>
         <span class="welcome-text">Välkommen, <%= user.name %></span>
-        <a href="/dashboard">Dashboard</a>
-        <form id="logout-form" method="POST" action="/logout">
+        <a href="./dashboard">Dashboard</a>
+        <form id="logout-form" method="POST" action="./logout">
           <input type="hidden" id="csrfToken" name="_csrf" value="<%= csrfToken %>">
           <button type="submit" class="btn-logout">Logga ut</button>
         </form>
       <% } else { %>
-        <a href="/register">Registrera</a>
-        <a href="/login">Logga in</a>
+        <a href="./register">Registrera</a>
+        <a href="./login">Logga in</a>
       <% } %>
     </nav>
   </div>

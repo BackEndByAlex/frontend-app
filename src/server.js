@@ -8,13 +8,14 @@
 import express from 'express'
 import expressLayouts from 'express-ejs-layouts'
 import dotenv from 'dotenv'
-import logger from 'morgan'
+import logg from 'morgan'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import helmet from 'helmet'
 import session from 'express-session'
 import { router as routes } from './routes/pageRoutes.js'
 import { sessionOptions } from './config/sessionOptions.js'
+import { logger } from './config/winston.js'
 import rateLimit from 'express-rate-limit'
 import flash from 'express-flash'
 import csurf from 'csurf'
@@ -25,11 +26,19 @@ try {
   // Get the path of the current module's directory.
   const directoryFullName = dirname(fileURLToPath(import.meta.url))
 
-  // Set the base URL to use for all relative URLs in a document.
-  const baseURL = process.env.BASE_URL || '/'
-
   // Create Express application.
   const app = express()
+  app.use(express.json())
+
+
+  app.set('trust proxy', 1)
+
+    // Body parsing BEFORE csrf!
+
+  // Set the base URL to use for all relative URLs in a document.
+  const baseURL = process.env.BASE_URL || '/'
+  console.log('Using baseURL:', baseURL)
+
 
   // 1. Security headers
   app.use(
@@ -60,10 +69,8 @@ try {
   )
 
   // log requests to the console.
-  app.use(logger('dev'))
+  app.use(logg('dev'))
 
-  // 2. Body parsing BEFORE csrf!
-  app.use(express.json())
   app.use(express.urlencoded({ extended: false }))
 
   // 3. Session setup
@@ -98,6 +105,7 @@ try {
       req.path.startsWith('/api/') ||
       req.path.startsWith('/auth/google') ||
       req.path.startsWith('/firebase-config') ||
+      req.path.startsWith('/TimeLock/google/proxy') ||
       req.path === '/favicon.ico'
     ) {
       return next()
@@ -151,8 +159,8 @@ try {
 
   // Start the server.
   const server = app.listen(process.env.PORT, () => {
-    console.log(`Frontend running at http://localhost:${server.address().port}`)
-    console.log('Press Ctrl-C to terminate...')
+    logger.info(`Frontend running at http://localhost:${server.address().port}`)
+    logger.info('Press Ctrl-C to terminate...')
   })
 } catch (error) {
   console.error('Error starting the server:', error)

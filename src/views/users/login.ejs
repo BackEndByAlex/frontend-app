@@ -1,13 +1,13 @@
-<link rel="stylesheet" href="css/login.css">
-<script type="module" src="/js/google.js"></script>
+<link rel="stylesheet" href="./css/login.css">
+<script type="module" src="./js/google.js"></script>
 
 <section class="auth-section">
   <%- include('../partials/flashmeddelande') %>
   <div class="auth-container">
     <h1 class="auth-title">Logga in till TimeLock</h1>
 
-    <form action="/auth/login" method="POST" class="auth-form">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <form action="./auth/login" method="POST" class="auth-form">
+      <input type="hidden" name="_csrf" id="csrfToken" value="<%= csrfToken %>">
       <label for="email">E-post</label>
       <input type="email" name="email" id="email" required placeholder="you@example.com" />
 
@@ -23,6 +23,6 @@
 
     <button id="google-login" class="btn-google"> Logga in med Google </button>
 
-    <p class="auth-footer">Har du inget konto? <a href="/register">Registrera dig här</a></p>
+    <p class="auth-footer">Har du inget konto? <a href="./register">Registrera dig här</a></p>
   </div>
 </section>

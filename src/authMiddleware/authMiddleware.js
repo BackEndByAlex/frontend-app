@@ -16,7 +16,7 @@ export const requireAuth = (req, res, next) => {
   const token = req.session?.user?.jwt
 
   if (!token) {
-    return res.redirect('/login')
+    return res.redirect('./login')
   }
 
   try {
@@ -25,6 +25,6 @@ export const requireAuth = (req, res, next) => {
     next()
   } catch (err) {
     console.error('Token verification failed:', err)
-    return res.redirect('/login')
+    return res.redirect('./login')
   }
 }

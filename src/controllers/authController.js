@@ -30,7 +30,7 @@ export const logout = (req, res) => {
       return res.status(500).json({ message: 'Logout failed' })
     }
     res.clearCookie('connect.sid')
-    res.redirect('/')
+    res.redirect('./')
   })
 }
 
@@ -47,7 +47,7 @@ export const handleFormLogin = async (req, res) => {
     if (!req.session) {
       logger.info('[LOGIN ERROR] No active session found.')
       req.flash('error', 'Inloggningen misslyckades, vänligen försök igen.')
-      return res.redirect('/login')
+      return res.redirect('../login')
     }
 
     const { payload, token } = await loginWithForm(req.body)
@@ -62,11 +62,11 @@ export const handleFormLogin = async (req, res) => {
     req.session.isCodeVerified = false
     await sendVerificationCodeAfterLogin(token)
     req.flash('success', 'Inloggning lyckades! En verifieringskod har skickats till din e-post.')
-    res.redirect('/dashboard')
+    res.redirect('../dashboard')
   } catch (err) {
     logger.error('[LOGIN ERROR]', { error: err })
     req.flash('error', 'Fel vid inloggning. Kontrollera dina uppgifter.')
-    res.redirect('/login')
+    res.redirect('../login')
   }
 }
 
@@ -79,7 +79,10 @@ export const handleFormLogin = async (req, res) => {
  */
 export const handleGoogleLoginProxy = async (req, res) => {
   try {
-    const { payload, token } = await authenticateGoogleUser(req.body.idToken)
+    const { idToken } = req.body
+    console.log('[DEBUG] idToken:', idToken)
+
+    const { payload, token } = await authenticateGoogleUser(idToken)
 
     req.session.user = {
       ...payload,
@@ -88,13 +91,13 @@ export const handleGoogleLoginProxy = async (req, res) => {
 
     req.session.isCodeVerified = false
 
-    await sendVerificationCode(req.body.idToken)
+    await sendVerificationCode(idToken)
 
-    req.flash('success', 'Google-inloggning lyckades! En verifieringskod har skickats till din e-post.')
-    res.redirect('/dashboard')
+    req.flash('success', 'Google-inloggning lyckades!')
+    res.status(200).json({ message: 'Session created' })
   } catch (err) {
     logger.error('[GOOGLE LOGIN ERROR]', { error: err })
-    req.flash('error', 'Google-inloggning misslyckades. Försök igen.')
-    res.redirect('/login')
+    res.status(403).json({ error: 'Google-login misslyckades' })
   }
 }
+

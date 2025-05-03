@@ -12,14 +12,14 @@ export const savePassword = async (req, res) => {
   try {
     if (!req.session?.user || !req.session.isCodeVerified) {
       req.flash('error', 'Du måste vara verifierad för att spara lösenord.')
-      return res.redirect('/dashboard')
+      return res.redirect('./dashboard')
     }
 
     const { service, username, password } = req.body
 
     if (!service || !username || !password) {
       req.flash('error', 'Alla fält måste fyllas i.')
-      return res.redirect('/dashboard')
+      return res.redirect('./dashboard')
     }
 
     const token = req.session.user.jwt
@@ -32,10 +32,10 @@ export const savePassword = async (req, res) => {
     }, token)
 
     req.flash('success', 'Lösenord sparat!')
-    res.redirect('/dashboard')
+    res.redirect('./dashboard')
   } catch (error) {
     logger.error('[SAVE PASSWORD ERROR]', { error })
     req.flash('error', 'Kunde inte spara lösenord.')
-    res.redirect('/dashboard')
+    res.redirect('./dashboard')
   }
 }

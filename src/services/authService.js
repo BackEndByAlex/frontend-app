@@ -26,12 +26,12 @@ export async function loginWithForm (credentials) {
 /**
  * Authenticates a user via Google ID token.
  *
- * @param {string} idToken - The Google ID token.
+ * @param {string} idToken - The Google ID token.x
  * @returns {object} - The session user data.
  */
 export async function authenticateGoogleUser (idToken) {
   try {
-    const response = await fetch('http://localhost:4000/api/v1/google', {
+    const response = await fetch('http://auth:4000/api/v1/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idToken }),
@@ -60,7 +60,7 @@ export async function authenticateGoogleUser (idToken) {
  */
 export async function sendVerificationCode (idToken) {
   try {
-    const response = await fetch('http://localhost:4000/api/v1/send-verification-code/google', {
+    const response = await fetch('http://auth:4000/api/v1/send-verification-code/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idToken })
@@ -83,7 +83,7 @@ export async function sendVerificationCode (idToken) {
  */
 export async function sendVerificationCodeAfterLogin (token) {
   try {
-    const response = await fetch('http://localhost:4000/api/v1/send-verification-code', {
+    const response = await fetch('http://auth:4000/api/v1/send-verification-code', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

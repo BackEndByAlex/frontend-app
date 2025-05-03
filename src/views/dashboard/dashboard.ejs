@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="css/dashboard.css">
-<script type="module" src="/js/password.js"></script>
-<script type="module" src="/js/checkSession.js"></script>
+<script type="module" src="./js/password.js"></script>
+<script type="module" src="./js/checkSession.js"></script>
 
 <div class="dashboard-page">
   <%- include('../partials/flashmeddelande') %>
@@ -10,7 +10,7 @@
   <% if (!isCodeVerified) { %>
     <div class="dashboard-card">
       <h2>Verifiera din kod</h2>
-      <form action="/verify-code" method="POST" class="verify-form">
+      <form action="./verify-code" method="POST" class="verify-form">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <input type="text" name="code" placeholder="Ange din kod här" required />
         <button type="submit" class="btn-primary">Verifiera</button>
@@ -41,7 +41,7 @@
           </div>
         </div>
     
-        <form id="save-password-form" action="/save-password" method="POST" class="save-password-form">
+        <form id="save-password-form" action="./save-password" method="POST" class="save-password-form">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         
           <input type="text" name="service" placeholder="Tjänstens namn" required>

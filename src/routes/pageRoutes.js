@@ -26,10 +26,13 @@ import { savePassword } from '../controllers/savePasswordController.js'
 export const router = express.Router()
 
 router.get('/', renderHome)
+
+router.get('/login', renderLogin)
+
 router.get('/firebase-config', getFirebaseConfig)
 router.get('/register', renderRegister)
-router.get('/login', renderLogin)
 router.get('/check-session', checkSession)
+router.post('/google/proxy', handleGoogleLoginProxy)
 
 router.get('/dashboard', requireAuth, renderSmartDashboard)
 router.get('/generate-password', generatePassword)
@@ -42,3 +45,4 @@ router.post('/save-password', requireAuth, savePassword)
 
 router.post('/logout', logout)
 router.post('/verify-code', postVerifyCode)
+
