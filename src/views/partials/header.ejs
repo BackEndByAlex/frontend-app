@@ -1,28 +1,45 @@
-<link rel="stylesheet" href="./css/header-footer.css">
-<script type="module" src="./js/logout.js"></script>
-<script type="module" src="./js/header.js"></script>
 <% if (!locals.hideHeader) { %>
-  <header class="site-header sticky-header">
-    <div class="header-container">
-      <div class="header-left">
-        <a href="./" class="brand-logo">🔐 TimeLock</a>
-      </div>
-
-      <button class="menu-toggle" aria-label="Toggle menu">☰</button>
-
-      <nav class="header-nav">
+  <link rel="stylesheet" href="./css/header-footer.css">
+  <link rel="stylesheet" href="./css/sidebar.css">
+  <script type="module" src="./js/logout.js"></script>
+  <script type="module" src="./js/sidebarToggle.js"></script>
+  
+  <!-- Mobilmenyknapp -->
+  <button class="menu-toggle" aria-label="Öppna meny">☰</button>
+  
+  <!-- SIDEBAR SOM HEADER -->
+  <aside class="sidebar">
+    <div class="sidebar-container">
+      <!-- Logotyp -->
+      <a href="./"><h2>🔐 TimeLock</h2></a>
+  
+      <!-- Navigering -->
+      <nav class="sidebar-nav">
         <% if (typeof user !== 'undefined' && user) { %>
-          <span class="welcome-text">Välkommen, <%= user.name %></span>
-          <a href="./dashboard">Dashboard</a>
-          <form id="logout-form" method="POST" action="./logout">
-            <input type="hidden" id="csrfToken" name="_csrf" value="<%= csrfToken %>">
-            <button type="submit" class="btn-logout">Logga ut</button>
-          </form>
+          <button class="sidebar-btn" href="./dashboard">📂 Dashboard</button>
+          <button class="sidebar-btn" href="./setting">⚙️ Inställningar</button>
         <% } else { %>
-          <a href="./register">Registrera</a>
-          <a href="./login">Logga in</a>
+          <a class="sidebar-btn" href="./register">📝 Registrera</a>
+          <a class="sidebar-btn" href="./login">🔑 Logga in</a>
         <% } %>
       </nav>
     </div>
-  </header>
-<% } %>
+  
+    <!-- Användarinformation (längst ner) -->
+    <% if (typeof user !== 'undefined' && user) { %>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="avatar">👤</div>
+          <div class="user-details">
+            <span class="user-name"><%= user.name %></span>     
+            <form id="logout-form" method="POST" action="./logout">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="btn-logout">Logga ut</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </aside>
+  <% } %>
+  
