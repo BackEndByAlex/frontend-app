@@ -8,9 +8,12 @@ import { logger } from '../config/winston.js'
  * @param {object} res - The response object.
  */
 export const renderHome = (req, res) => {
+
+
   res.render('home/index', {
     title: 'Home',
-    user: req.session.user
+    user: req.session.user,
+    isCodeVerified: req.user?.verificationCode?.used === true
   })
 }
 
@@ -35,7 +38,7 @@ export const renderDashboard = (req, res) => {
   res.render('dashboard/dashboard', {
     user,
     isCodeVerified,
-    hideHeader: true
+    hideHeader: true,
   })
 }
 
