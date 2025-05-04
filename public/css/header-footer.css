@@ -101,7 +101,6 @@
   .welcome-text,
   .btn-logout {
     width: 100%;
-    padding: 0.5rem 0;
     text-align: left;
   }
 }

@@ -1,7 +1,9 @@
 <link rel="stylesheet" href="css/header-footer.css">
 
-<footer class="site-footer">
-  <div class="container">
-    <p>&copy; 2025 TimeLock. All rights reserved.</p>
-  </div>
-</footer>
+<% if (!locals.hideHeader) { %>
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2025 TimeLock. All rights reserved.</p>
+    </div>
+  </footer>
+<% } %>
