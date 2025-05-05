@@ -11,7 +11,7 @@
   <%- defineContent('script') %>
 </head>
 
-<body>
+<body class="<%= !locals.hideHeader ? 'sidebar-visible' : '' %>">
   <%- include('../partials/header') %>
   
   <div class="container">

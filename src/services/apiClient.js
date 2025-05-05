@@ -1,5 +1,8 @@
 import { logger } from '../config/winston.js'
 
+const AUTH_URL = process.env.AUTH_URL
+const PASSWORD_URL = process.env.PASSWORD_URL
+
 /**
  * Fetches the Firebase configuration from the backend API.
  *
@@ -21,7 +24,7 @@ export async function getFirebaseConfig () {
  */
 export async function verifyCodeFromAuthService (email, code, token) {
   try {
-    const res = await fetch('http://auth:4000/api/v1/verify-code', {
+    const res = await fetch(`${AUTH_URL}/verify-code`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +58,7 @@ export async function verifyCodeFromAuthService (email, code, token) {
  */
 export async function postToAuthService (endpoint, body) {
   try {
-    const response = await fetch(`http://auth:4000/api/v1/${endpoint}`, {
+    const response = await fetch(`${AUTH_URL}/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
@@ -88,7 +91,7 @@ export async function postToAuthService (endpoint, body) {
  * @returns {Promise<object>} - The response data.
  */
 export async function postToPasswordService (endpoint, body, token) {
-  const response = await fetch(`http://password:4001/api/v1/${endpoint}`, {
+  const response = await fetch(`${PASSWORD_URL}/${endpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -114,7 +117,7 @@ export async function postToPasswordService (endpoint, body, token) {
  * @returns {Promise<object>} - The response data.
  */
 export async function getFromPasswordService (endpoint, token) {
-  const res = await fetch(`http://password:4001/api/v1/${endpoint}`, {
+  const res = await fetch(`${AUTH_URL}/${endpoint}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`
@@ -128,4 +131,20 @@ export async function getFromPasswordService (endpoint, token) {
   }
 
   return data
+}
+
+export async function sendFeedback(message) {
+  const response = await fetch(`${AUTH_URL}/feedback`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message })
+  })
+
+  if (!response.ok) throw new Error('Misslyckades att skicka feedback')
+}
+
+export async function fetchAllFeedback() {
+  const response = await fetch(`${AUTH_URL}/feedback-get-all`)
+  if (!response.ok) throw new Error('Kunde inte hämta feedback')
+  return await response.json()
 }

@@ -5,6 +5,7 @@ import { logger } from '../config/winston.js'
 import fs from 'fs'
 
 const publicKey = fs.readFileSync('./public.pem')
+const AUTH_URL = process.env.AUTH_URL
 
 /**
  * Logs in a user using form credentials.
@@ -31,7 +32,7 @@ export async function loginWithForm (credentials) {
  */
 export async function authenticateGoogleUser (idToken) {
   try {
-    const response = await fetch('http://auth:4000/api/v1/google', {
+    const response = await fetch(`${AUTH_URL}/google`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idToken }),
@@ -60,7 +61,7 @@ export async function authenticateGoogleUser (idToken) {
  */
 export async function sendVerificationCode (idToken) {
   try {
-    const response = await fetch('http://auth:4000/api/v1/send-verification-code/google', {
+    const response = await fetch(`${AUTH_URL}/send-verification-code/google`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idToken })
@@ -83,7 +84,7 @@ export async function sendVerificationCode (idToken) {
  */
 export async function sendVerificationCodeAfterLogin (token) {
   try {
-    const response = await fetch('http://auth:4000/api/v1/send-verification-code', {
+    const response = await fetch(`${AUTH_URL}/send-verification-code`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
