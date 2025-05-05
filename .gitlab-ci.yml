@@ -11,6 +11,7 @@ build-image:
     entrypoint: [""]  
   before_script:
     - cp "$PUBLIC_PEM" "$CI_PROJECT_DIR/public.pem"
+    - cp "$DOTENV_FILE" "$CI_PROJECT_DIR/.env"
   script:
     - /kaniko/executor --context=$CI_PROJECT_DIR --dockerfile=$CI_PROJECT_DIR/Dockerfile --destination=$IMAGE_TAG --verbosity=debug
   only:
