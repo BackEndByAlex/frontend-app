@@ -8,12 +8,8 @@ build-image:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
-    entrypoint: [""]      # Återställ entrypoint så att GitLab CI använder den inbyggda skalet
+    entrypoint: [""]  
   script:
-    - /kaniko/executor \
-        --context=$CI_PROJECT_DIR \
-        --dockerfile=$CI_PROJECT_DIR/Dockerfile \
-        --destination=$IMAGE_TAG \
-        --verbosity=debug
+    - /kaniko/executor --context=$CI_PROJECT_DIR --dockerfile=$CI_PROJECT_DIR/Dockerfile --destination=$IMAGE_TAG --verbosity=debug
   only:
     - feature/CI-CD
