@@ -1,5 +1,6 @@
 import { verifyCodeFromAuthService, getFromPasswordService } from '../services/apiClient.js'
 import { logger } from '../config/winston.js'
+import { getFeedbackFromAuth } from './feedbackController.js'
 
 /**
  * Renders the home page.
@@ -7,14 +8,22 @@ import { logger } from '../config/winston.js'
  * @param {object} req - The request object.
  * @param {object} res - The response object.
  */
-export const renderHome = (req, res) => {
+export const renderHome = async (req, res) => {
+  try {
+    const feedbacks = await getFeedbackFromAuth()
 
-
-  res.render('home/index', {
-    title: 'Home',
-    user: req.session.user,
-    isCodeVerified: req.user?.verificationCode?.used === true
-  })
+    res.render('home/index', {
+      title: 'Home',
+      user: req.session.user,
+      feedbacks // skicka med feedback till vyn
+    })
+  } catch (err) {
+    res.render('home/index', {
+      title: 'Home',
+      user: req.session.user,
+      feedbacks: []
+    })
+  }
 }
 
 /**

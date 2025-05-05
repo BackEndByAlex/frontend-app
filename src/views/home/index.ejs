@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="./css/home.css" />
+<script type="module" src="./js/feedback.js"></script>
 <main class="hero">
   <div class="hero-content">
     <h1><span>Protect</span> your passwords</h1>
@@ -7,6 +8,29 @@
       <a href="./dashboard" class="btn-primary">Gå till Dashboard</a>
     <% } else { %>
       <a href="./login" class="btn-primary">Get Started</a>
-    <% } %>   
+    <% } %>
   </div>
+
+  <!-- Feedback panel som egen sektion -->
+  <div class="feedback-section">
+    <h3>Leave anonymous feedback 💬</h3>
+    <form id="feedback-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="text" id="feedback-message" placeholder="Type your message..." required>
+      <button type="submit">Send</button>
+    </form>
+  
+    <div class="feedback-list">
+      <h3 class="feedback-heading">🗨️ Recent Feedback</h3>
+      <ul id="feedback-list">
+        <% if (feedbacks && feedbacks.length > 0) { %>
+          <% feedbacks.forEach(fb => { %>
+            <li class="fade-in"><%= fb.message %></li>
+          <% }) %>
+        <% } else { %>
+          <li>Inget feedback ännu.</li>
+        <% } %>
+      </ul>
+    </div>
+  </div>  
 </main>

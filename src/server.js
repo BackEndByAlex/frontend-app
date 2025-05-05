@@ -149,12 +149,13 @@ try {
   // 12. Register routes
   app.use('/', routes)
 
-  // 13. Error handler
+  app.use((req, res, next) => {
+    res.status(404).render('./error/404', { title: '404' })
+  })
+
   app.use((err, req, res, next) => {
-    console.error(err)
-    res
-      .status(err.status || 500)
-      .send(err.message || 'Internal Server Error')
+    console.error(err.stack)
+    res.status(500).render('./error/500', { title: 'Serverfel' })
   })
 
   // Start the server.
