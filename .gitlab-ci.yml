@@ -1,26 +1,18 @@
 stages:
   - build
-  - push
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
-.build_template: &kaniko_build
-  image:
-    name: gcr.io/kaniko-project/executor:latest
-    entrypoint: [""]
-  script:
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - >
-      /kaniko/executor
-      --context $CI_PROJECT_DIR
-      --dockerfile $CI_PROJECT_DIR/Dockerfile
-      --destination $IMAGE_TAG
-
 build:
   stage: build
-  <<: *kaniko_build
-
-push:
-  stage: push
-  <<: *kaniko_build
+  image:
+    name: gcr.io/kaniko-project/executor:latest
+    entrypoint: [""]  # Förhindrar GitLab från att försöka använda sh
+  script:
+    - >
+      echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json &&
+      /kaniko/executor
+        --context $CI_PROJECT_DIR
+        --dockerfile $CI_PROJECT_DIR/Dockerfile
+        --destination $IMAGE_TAG
