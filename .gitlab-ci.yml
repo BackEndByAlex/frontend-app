@@ -9,20 +9,8 @@ build-image:
   image:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: [""]
-  before_script:
-    - cp "$PUBLIC_PEM" "$CI_PROJECT_DIR/public.pem"
-  script:
-    stages:
-  - build
-
-variables:
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-
-build-image:
-  stage: build
-  image:
-    name: gcr.io/kaniko-project/executor:v1.23.2-debug
-    entrypoint: [""]
+      before_script:
+      - cp "$PUBLIC_PEM" "$CI_PROJECT_DIR/public.pem"
   before_script:
     - cp "$PUBLIC_PEM" "$CI_PROJECT_DIR/public.pem"
   script:
