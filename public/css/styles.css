@@ -34,3 +34,24 @@ main {
 .btn-primary:hover {
   background-color: #012f5f;
 }
+
+body.sidebar-visible .feedback-display {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
+body.sidebar-visible main {
+  margin-left: 240px; /* Justera detta värde för att matcha sidofältets bredd */
+  transition: margin 0.3s ease;
+}
+
+@media screen and (max-width: 800px) {
+  body.sidebar-visible main {
+    margin-left: 0; /* Ingen marginal på små skärmar */
+    transition: margin 0.3s ease;
+  }
+  body.sidebar-visible .feedback-display {
+    margin-left: 0;
+    transition: margin 0.3s ease;
+  }
+}

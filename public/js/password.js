@@ -30,7 +30,7 @@ onDomReady(() => {
   if (generateButton && passwordInput) {
     generateButton.addEventListener('click', async () => {
       try {
-        const res = await fetch('/TimeLock/generate-password')
+        const res = await fetch('./generate-password')
         const data = await res.json()
         passwordInput.value = data.password
         passwordInput.type = 'password'

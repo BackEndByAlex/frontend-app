@@ -23,7 +23,7 @@ async function main () {
 
       const csrfToken = document.getElementById('csrfToken')?.value || ''
 
-      const proxyResponse = await fetch('/TimeLock/google/proxy', {
+      const proxyResponse = await fetch('./google/proxy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ async function main () {
 
       if (!proxyResponse.ok) throw new Error('Proxy-login misslyckades')
 
-      window.location.href = '/TimeLock/dashboard'
+      window.location.href = './dashboard'
     } catch (err) {
       console.error('[GOOGLE LOGIN ERROR]', err)
       alert('Google-login misslyckades!')
