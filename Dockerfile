@@ -1,6 +1,9 @@
 # Använd officiell Node.js-bild
 FROM node:23-slim
 
+# Steg 1: ta med certifikatet i sitt eget lager
+COPY public.pem ./
+
 # Sätt arbetskatalogen i containern
 WORKDIR /app
 

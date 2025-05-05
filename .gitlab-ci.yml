@@ -8,8 +8,14 @@ build-image:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
-    entrypoint: [""]  
+    entrypoint: [""]
+  before_script:
+    - cp "$PUBLIC_PEM" "$CI_PROJECT_DIR/public.pem"
   script:
-    - /kaniko/executor --context=$CI_PROJECT_DIR --dockerfile=$CI_PROJECT_DIR/Dockerfile --destination=$IMAGE_TAG --verbosity=debug
+    - /kaniko/executor \
+        --context=$CI_PROJECT_DIR \
+        --dockerfile=$CI_PROJECT_DIR/Dockerfile \
+        --destination=$IMAGE_TAG \
+        --verbosity=debug
   only:
     - feature/CI-CD
