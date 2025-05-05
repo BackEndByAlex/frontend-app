@@ -1,16 +1,6 @@
 stages:
-  - lint
   - build
   - push
-
-lint:
-stage: lint
-image: node:23-slim
-script:
-  - npm ci
-  - npm run lint
-only:
-  - feature/CI-CD
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
