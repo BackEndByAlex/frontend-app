@@ -10,9 +10,9 @@ build-image:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: [""]  
   before_script:
-    # Kopiera in .env från File-variabeln
+    # .env från File-variabeln
     - cp "$DOTENV_FILE" "$CI_PROJECT_DIR/.env"
-    # Om du också använder PUBLIC_PEM:
+    # använder PUBLIC_PEM:
     - cp "$PUBLIC_PEM" "$CI_PROJECT_DIR/public.pem"
   script:
     - /kaniko/executor --context=$CI_PROJECT_DIR --dockerfile=$CI_PROJECT_DIR/Dockerfile --destination=$IMAGE_TAG --verbosity=debug
