@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { logger } from '../config/winston.js'
 
 /**
  * Connects to MongoDB using the DB_CONNECTION_STRING environment variable.
@@ -9,9 +10,9 @@ import mongoose from 'mongoose'
 const connectDB = async () => {
   try {
     mongoose.connect(process.env.DB_CONNECTION_STRING) // Use the correct env variable
-    console.log('Connected to MongoDB')
+    logger.log('Connected to MongoDB')
   } catch (error) {
-    console.error('MongoDB connection error:', error.message)
+    logger.error('MongoDB connection error:', error.message)
     process.exit(1)
   }
 }

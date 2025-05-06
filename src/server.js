@@ -37,7 +37,6 @@ try {
 
   // Set the base URL to use for all relative URLs in a document.
   const baseURL = process.env.BASE_URL || '/'
-  console.log('Using baseURL:', baseURL)
 
 
   // 1. Security headers
@@ -154,7 +153,7 @@ try {
   })
 
   app.use((err, req, res, next) => {
-    console.error(err.stack)
+    logger.error(err.stack)
     res.status(500).render('./error/500', { title: 'Serverfel' })
   })
 
@@ -164,6 +163,6 @@ try {
     logger.info('Press Ctrl-C to terminate...')
   })
 } catch (error) {
-  console.error('Error starting the server:', error)
+  logger.error('Error starting the server:', error)
   process.exit(1) // Exit the process with a failure code
 }
