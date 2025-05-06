@@ -45,9 +45,12 @@ build-job:
   stage: build
   <<: *build_config
   script:
-    - echo "Compiling the code..."
-    - sleep 2   # Simulerar byggtid
-    - echo "Compile complete."
+    - echo "Generating config files..."
+    - mkdir -p config
+    - echo "$DOTENV_FILE" > config/.env
+    - echo "$PUBLIC_PEM"  > config/public.pem
+    - echo "Building Docker image..."
+    - docker build -t my-frontend-app .
 
 # ─────────────────────────────────────────────────────────────
 # 2) Unit-tester
