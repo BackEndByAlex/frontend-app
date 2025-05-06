@@ -78,8 +78,8 @@ deploy_production_job:
   before_script:
     - *before_script_ssh_setup
     - mkdir -p config
-    - echo "$DOTENV_FILE"  > .env
-    - echo "$PUBLIC_PEM"   > public.pem
+    - cp "$DOTENV_FILE" .env
+    - cp "$PUBLIC_PEM"  public.pem
   script:
     - echo "Deploying to production..."
     - docker compose -f docker-compose.yaml up --build -d
