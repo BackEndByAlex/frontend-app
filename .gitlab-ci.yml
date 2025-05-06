@@ -1,50 +1,65 @@
 # ─────────────────────────────────────────────────────────────
-# GitLab CI/CD för frontend-app: endast build + deploy
+# SSH-setup-anchor (används bara i deploy-steget)
 # ─────────────────────────────────────────────────────────────
-
 .before_script_ssh_setup: &before_script_ssh_setup
-  # Ensure ssh-agent is installed and started, essential for managing SSH keys.
-  # (Change apt-get to yum if using an RPM-based image)
-  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )
-
-  # Start the ssh-agent in the background.
+  # Se till att ssh-agent finns
+  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install -y openssh-client -y )
+  # Starta ssh-agent
   - eval $(ssh-agent -s)
-
-  # Add the SSH private key stored in the SSH_PRIVATE_KEY variable to the ssh-agent.
-  - ssh-add "$SSH_PRIVATE_KEY"
-
-  # Create the .ssh directory and set the correct permissions.
+  # Lägg till privat SSH-nyckel från CI-variabeln
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  # Skapa ~/.ssh och sätt behörigheter
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
-
-  # Use ssh-keyscan to add the remote server's SSH key to the known_hosts file.
-  # This prevents SSH from prompting for approval of the remote server's key.
-  - ssh-keyscan -H $PRODUCTION_HOST >> ~/.ssh/known_hosts
+  # Lägg till värdservern i known_hosts
+  - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 
-# Specify the Docker image to be used for the jobs, which supports Docker commands.
+# ─────────────────────────────────────────────────────────────
+# Basimage med Docker CLI
+# ─────────────────────────────────────────────────────────────
 image: docker:27-cli
 
+# ─────────────────────────────────────────────────────────────
+# Definiera pipelinens steg
+# ─────────────────────────────────────────────────────────────
 stages:
   - build
+  - test
   - deploy
 
 # ─────────────────────────────────────────────────────────────
-# 1) Build-jobb: bygger Docker-imagen och pushar till GitLab Registry
+# 1) Kompilera koden
 # ─────────────────────────────────────────────────────────────
 build-job:
   stage: build
-  # Om ni använder File-variabler för .env/public.pem, 
-  # skapa config/ och injicera dem här
   script:
     - echo "Compiling the code..."
-    - sleep 2 # Simulate compilation time.
+    - sleep 2   # Simulerar byggtid
     - echo "Compile complete."
-  # only:
-  #   - main
 
 # ─────────────────────────────────────────────────────────────
-# 2) Deploy-jobb: driftsätter via Docker-over-SSH → Docker Compose
+# 2) Unit-tester
+# ─────────────────────────────────────────────────────────────
+unit-test-job:
+  stage: test
+  script:
+    - echo "Running unit tests... This will take about 60 seconds."
+    - sleep 2   # Simulerar testtid
+    - echo "Code coverage is 90%"
+
+# ─────────────────────────────────────────────────────────────
+# 3) Lint
+# ─────────────────────────────────────────────────────────────
+lint-test-job:
+  stage: test
+  script:
+    - echo "Linting code... This will take about 10 seconds."
+    - sleep 2   # Simulerar linttid
+    - echo "No lint issues found."
+
+# ─────────────────────────────────────────────────────────────
+# 4) Deploy till produktion via Docker-over-SSH
 # ─────────────────────────────────────────────────────────────
 deploy_production_job:
   stage: deploy
@@ -52,23 +67,21 @@ deploy_production_job:
     name: production
     url: http://$PRODUCTION_HOST
   variables:
-    REMOTE_HOST: $PRODUCTION_HOST # Set the REMOTE_HOST variable for production.
-    DOCKER_HOST: ssh://ubuntu@$PRODUCTION_HOST # Docker connection via SSH.
-  before_script: *before_script_ssh_setup # Reuse SSH setup steps.
-  # Stegen som körs på värdmaskinen via Docker-over-SSH
+    # Värdnamn/ip för servern, sätt denna i CI/CD-inställningarna
+    PRODUCTION_HOST: cscloud7-142.lnu.se
+    # SSH-användare på servern
+    DEPLOY_USER:     ubuntu
+    # Docker-host för över SSH
+    DOCKER_HOST:     ssh://$DEPLOY_USER@$PRODUCTION_HOST
+  before_script:
+    - *before_script_ssh_setup
   script:
-    - echo "Bygger om och startar upp i produktion..."
-    # Peka Docker CLI mot fjärrvärden
-    - export DOCKER_HOST="ssh://$DEPLOY_USER@$PRODUCTION_HOST"
-    # Hämta senaste image och starta om containrarna
-    - docker compose -f docker-compose.yaml \
-                     -f docker-compose.production.yaml \
-                     pull
+    - echo "Deploying to production..."
     - docker compose -f docker-compose.yaml \
                      -f docker-compose.production.yaml \
                      up --build -d
-  # only:
-  #   - main # Only run this job on the main branch.
-  # needs:
-  #   - unit-test-job
-  #   - lint-test-job
+  only:
+    - main
+  needs:
+    - unit-test-job
+    - lint-test-job
