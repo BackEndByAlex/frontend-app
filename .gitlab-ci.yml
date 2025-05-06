@@ -1,76 +1,83 @@
 # ─────────────────────────────────────────────────────────────
-# GitLab CI/CD för frontend-app: endast build + deploy
+# GitLab CI/CD för frontend-app: Build via DinD + Deploy över SSH
 # ─────────────────────────────────────────────────────────────
 
-.before_script_ssh_setup: &before_script_ssh_setup
-  # Ensure ssh-agent is installed and started, essential for managing SSH keys.
-  # (Change apt-get to yum if using an RPM-based image)
-  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )
-
-  # Start the ssh-agent in the background.
-  - eval $(ssh-agent -s)
-
-  # Add the SSH private key stored in the SSH_PRIVATE_KEY variable to the ssh-agent.
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-
-  # Create the .ssh directory and set the correct permissions.
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-
-  # Use ssh-keyscan to add the remote server's SSH key to the known_hosts file.
-  # This prevents SSH from prompting for approval of the remote server's key.
-  - ssh-keyscan -H $PRODUCTION_HOST >> ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
-
-# Specify the Docker image to be used for the jobs, which supports Docker commands.
+# 1) Basimage med Docker CLI
 image: docker:27-cli
 
+# 2) Aktivera Docker-in-Docker som service
+services:
+  - name: docker:27-dind
+    alias: docker
+
+# 3) Globala variabler för DinD
+variables:
+  # Inaktivera TLS-certifikat för DinD
+  DOCKER_TLS_CERTDIR: ""
+  # Låt Docker CLI använda dind-servicen
+  DOCKER_HOST: tcp://docker:2375
+
+# 4) Pipeline-steg
 stages:
   - build
   - deploy
 
 # ─────────────────────────────────────────────────────────────
-# 1) Build-jobb: bygger Docker-imagen och pushar till GitLab Registry
+# SSH-setup (samma som tidigare)
+# ─────────────────────────────────────────────────────────────
+.before_script_ssh_setup: &before_script_ssh_setup
+  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install -y openssh-client )
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+  - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+
+# ─────────────────────────────────────────────────────────────
+# 1) Build-jobb med DinD
 # ─────────────────────────────────────────────────────────────
 build-job:
   stage: build
-  # Om ni använder File-variabler för .env/public.pem, 
-  # skapa config/ och injicera dem här
+
+  # Krävs för att DinD ska kunna starta containrar
+  privileged: true
+
+  # Om ni injicerar .env/public.pem via File-variabler:
+  before_script:
+    - mkdir -p config
+    - echo "$DOTENV_FILE" > config/.env
+    - echo "$PUBLIC_PEM"   > config/public.pem
+
   script:
-    - echo "Bygger frontend-imagen..."
-    # Bygg, logga in och pusha
+    - echo "Bygger frontend-imagen med Docker-in-Docker..."
     - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u gitlab-ci-token -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  # only:
-  #   - main
+
+  only:
+    - main
 
 # ─────────────────────────────────────────────────────────────
-# 2) Deploy-jobb: driftsätter via Docker-over-SSH → Docker Compose
+# 2) Deploy-jobb: SSH + Docker Compose
 # ─────────────────────────────────────────────────────────────
-deploy_production_job:
+deploy-job:
   stage: deploy
-  environment:
-    name: production
-    url: http://$PRODUCTION_HOST
+  only:
+    - main
+
   variables:
-    REMOTE_HOST: $PRODUCTION_HOST # Set the REMOTE_HOST variable for production.
-    DOCKER_HOST: ssh://ubuntu@$PRODUCTION_HOST # Docker connection via SSH.
-  before_script: *before_script_ssh_setup # Reuse SSH setup steps.
-  # Stegen som körs på värdmaskinen via Docker-over-SSH
+    PRODUCTION_HOST: cscloud7-142.lnu.se
+    DEPLOY_USER:     ubuntu
+
+  before_script:
+    - *before_script_ssh_setup
+
   script:
-    - echo "Bygger om och startar upp i produktion..."
-    # Peka Docker CLI mot fjärrvärden
+    - echo "Ansluter till $PRODUCTION_HOST och startar om frontenden..."
     - export DOCKER_HOST="ssh://$DEPLOY_USER@$PRODUCTION_HOST"
-    # Hämta senaste image och starta om containrarna
     - docker compose -f docker-compose.yaml \
                      -f docker-compose.production.yaml \
                      pull
     - docker compose -f docker-compose.yaml \
                      -f docker-compose.production.yaml \
                      up --build -d
-  # only:
-  #   - main # Only run this job on the main branch.
-  # needs:
-  #   - unit-test-job
-  #   - lint-test-job
