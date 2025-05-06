@@ -119,6 +119,7 @@ export const renderPassword = async (req, res) => {
 
   try {
     passwords = await getFromPasswordService('passwords', token)
+    console.log('[PASSWORDS]', passwords)
   } catch (err) {
     console.error('[FETCH PASSWORDS ERROR]', err)
     req.flash('error', 'Kunde inte hämta sparade lösenord.')
