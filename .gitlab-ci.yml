@@ -77,6 +77,9 @@ deploy_production_job:
     DOCKER_HOST:     ssh://$DEPLOY_USER@$PRODUCTION_HOST
   before_script:
     - *before_script_ssh_setup
+    - mkdir -p config
+    - echo "$DOTENV_FILE"  > config/.env
+    - echo "$PUBLIC_PEM"   > config/public.pem
   script:
     - echo "Deploying to production..."
     - docker compose -f docker-compose.yaml up --build -d
