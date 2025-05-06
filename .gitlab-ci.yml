@@ -21,7 +21,8 @@ stages:
   # Lägg in privat SSH-nyckel från CI-variabeln SSH_PRIVATE_KEY
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
   # Skapa och lås ner ~/.ssh
-  - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+  - mkdir -p ~/.ssh 
+  - chmod 700 ~/.ssh
   # Acceptera värdserverns host key automatiskt
   - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
@@ -53,12 +54,14 @@ deploy-job:
   stage: deploy
   # only:
   #   - main
-  variables:
-    PRODUCTION_HOST: cscloud7-142.lnu.se
-    DEPLOY_USER:     ubuntu
+  environment:
+    name: production
+    url: http://$PRODUCTION_HOST
   # Återanvänd SSH-setup från mallen
   before_script:
-    - *before_script_ssh_setup
+    REMOTE_HOST: $PRODUCTION_HOST # Set the REMOTE_HOST variable for production.
+    DOCKER_HOST: ssh://ubuntu@$PRODUCTION_HOST # Docker connection via SSH.
+    before_script: *before_script_ssh_setup
   script:
     - echo "Bygger om och startar upp i produktion..."
     # Pekar Docker-CLI mot produktionsservern
@@ -70,3 +73,6 @@ deploy-job:
     - docker compose -f docker-compose.yaml \
                      -f docker-compose.production.yaml \
                      up --build -d
+  # needs:
+  #   - unit-test-job
+  #   - lint-test-job
