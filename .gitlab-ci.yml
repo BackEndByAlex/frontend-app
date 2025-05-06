@@ -37,11 +37,10 @@ build-job:
   # Om ni använder File-variabler för .env/public.pem, 
   # skapa config/ och injicera dem här
   script:
-    - echo "Bygger frontend-imagen..."
-    # Bygg, logga in och pusha
-    - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    - echo "Compiling the code..."
+    - sleep 2 # Simulate compilation time.
+    - echo "Compile complete."
+
   # only:
   #   - main
 
