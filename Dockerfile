@@ -5,14 +5,15 @@
 FROM node:23-slim
 WORKDIR /app
 
-# 1) Inkludera konfigurationsfiler
-#    Dessa skapas av CI-pipelinen i mappen config/
-COPY config/.env        .env
-COPY config/public.pem  ./public.pem
+# Steg 1: ta med certifikatet i sitt eget lager
+COPY public.pem ./
+
+# Ta med miljöfilen i sitt eget lager
+COPY .env ./
 
 # 2) Installera beroenden (endast production för snabbhet)
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm install
 
 # 3) Kopiera resten av applikationen
 COPY . .
