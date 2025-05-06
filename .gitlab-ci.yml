@@ -11,7 +11,7 @@
   - eval $(ssh-agent -s)
 
   # Add the SSH private key stored in the SSH_PRIVATE_KEY variable to the ssh-agent.
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - ssh-add "$SSH_PRIVATE_KEY"
 
   # Create the .ssh directory and set the correct permissions.
   - mkdir -p ~/.ssh
