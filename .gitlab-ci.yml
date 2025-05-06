@@ -3,16 +3,16 @@
 # ─────────────────────────────────────────────────────────────
 .before_script_ssh_setup: &before_script_ssh_setup
   # Se till att ssh-agent finns
-  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install -y openssh-client )
+  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install -y openssh-client -y )
   # Starta ssh-agent
   - eval $(ssh-agent -s)
-  # Ge rättigheter och lägg till privat SSH-nyckel från CI-variabeln
+  # Lägg till privat SSH-nyckel från CI-variabeln
   - chmod 600 "$SSH_PRIVATE_KEY"
   - ssh-add "$SSH_PRIVATE_KEY"
   # Skapa ~/.ssh och sätt behörigheter
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
-  # Acceptera värdserverns host‐key
+  # Lägg till värdservern i known_hosts
   - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 
@@ -38,19 +38,17 @@ stages:
   - test
   - deploy
 
+.build_config: &build_config
+
 # ─────────────────────────────────────────────────────────────
-# 1) Build-job: injicera config (om File-variabler används) och bygga Docker-image
+# 1) Kompilera koden
 # ─────────────────────────────────────────────────────────────
 build-job:
   stage: build
-  <<: *build_config
   script:
-    - echo "Bygger frontend-imagen..."
-    - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
-    - docker login -u gitlab-ci-token -p "$CI_JOB_TOKEN" $CI_REGISTRY
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  only:
-    - main
+    - echo "Compiling the code..."
+    - sleep 2   # Simulerar byggtid
+    - echo "Compile complete."
 
 # ─────────────────────────────────────────────────────────────
 # 2) Unit-tester
@@ -59,7 +57,7 @@ unit-test-job:
   stage: test
   script:
     - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 2
+    - sleep 2   # Simulerar testtid
     - echo "Code coverage is 90%"
 
 # ─────────────────────────────────────────────────────────────
@@ -69,7 +67,7 @@ lint-test-job:
   stage: test
   script:
     - echo "Linting code... This will take about 10 seconds."
-    - sleep 2
+    - sleep 2   # Simulerar linttid
     - echo "No lint issues found."
 
 # ─────────────────────────────────────────────────────────────
@@ -77,20 +75,23 @@ lint-test-job:
 # ─────────────────────────────────────────────────────────────
 deploy_production_job:
   stage: deploy
-  only:
-    - main
   environment:
     name: production
     url: http://$PRODUCTION_HOST
   variables:
+    # Värdnamn/ip för servern, sätt denna i CI/CD-inställningarna
     PRODUCTION_HOST: cscloud7-142.lnu.se
+    # SSH-användare på servern
     DEPLOY_USER:     ubuntu
+    # Docker-host för över SSH
     DOCKER_HOST:     ssh://$DEPLOY_USER@$PRODUCTION_HOST
   before_script:
     - *before_script_ssh_setup
   script:
     - echo "Deploying to production..."
     - docker compose -f docker-compose.yaml up --build -d
+  only:
+    - main
   needs:
     - unit-test-job
     - lint-test-job
