@@ -26,7 +26,7 @@ export const renderLogin = (req, res) => {
 export const logout = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      console.error('Session destruction failed:', err)
+      logger.error('Session destruction failed:', err)
       return res.status(500).json({ message: 'Logout failed' })
     }
     res.clearCookie('connect.sid')
@@ -51,8 +51,6 @@ export const handleFormLogin = async (req, res) => {
     }
 
     const { payload, token } = await loginWithForm(req.body)
-
-    console.log('DEBUG: New login token:', token)
 
     req.session.user = {
       ...payload,
@@ -80,7 +78,6 @@ export const handleFormLogin = async (req, res) => {
 export const handleGoogleLoginProxy = async (req, res) => {
   try {
     const { idToken } = req.body
-    console.log('[DEBUG] idToken:', idToken)
 
     const { payload, token } = await authenticateGoogleUser(idToken)
 

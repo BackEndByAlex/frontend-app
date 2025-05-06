@@ -23,7 +23,6 @@ export const savePassword = async (req, res) => {
     }
 
     const token = req.session.user.jwt
-    console.log('[DEBUG] Skickar token till password-service:', token.substring(0, 20) + '...')
 
     await postToPasswordService('passwords', {
       service,

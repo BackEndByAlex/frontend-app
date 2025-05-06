@@ -1,3 +1,4 @@
+import { logger } from '../config/winston.js'
 import jwt from 'jsonwebtoken'
 import fs from 'fs'
 
@@ -24,7 +25,7 @@ export const requireAuth = (req, res, next) => {
     req.user = payload
     next()
   } catch (err) {
-    console.error('Token verification failed:', err)
+    logger.error('Token verification failed:', err)
     return res.redirect('./login')
   }
 }
