@@ -5,10 +5,6 @@ networks:
 services:
   auth:
     image: registry.gitlab.com/organisation/auth-service:${CI_COMMIT_REF_SLUG}
-    build:
-      context: ../auth-service
-      dockerfile: Dockerfile
-    container_name: auth-service
     expose:
       - "4000"
     networks:
