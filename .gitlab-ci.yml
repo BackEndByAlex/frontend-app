@@ -39,14 +39,18 @@ stages:
   - deploy
 
 # ─────────────────────────────────────────────────────────────
-# 1) Kompilera koden
+# 1) Build-job: injicera config och public.pem, bygg och push Docker-image
 # ─────────────────────────────────────────────────────────────
 build-job:
   stage: build
+  <<: *build_config
   script:
-    - echo "Compiling the code..."
-    - sleep 2   # Simulerar byggtid
-    - echo "Compile complete."
+    - echo "Bygger frontend-imagen..."
+    - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
+    - docker login -u gitlab-ci-token -p "$CI_JOB_TOKEN" $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  only:
+    - main
 
 # ─────────────────────────────────────────────────────────────
 # 2) Unit-tester
@@ -77,11 +81,8 @@ deploy_production_job:
     name: production
     url: http://$PRODUCTION_HOST
   variables:
-    # Värdnamn/ip för servern, sätt denna i CI/CD-inställningarna
     PRODUCTION_HOST: cscloud7-142.lnu.se
-    # SSH-användare på servern
     DEPLOY_USER:     ubuntu
-    # Docker-host för över SSH
     DOCKER_HOST:     ssh://$DEPLOY_USER@$PRODUCTION_HOST
   before_script:
     - *before_script_ssh_setup
