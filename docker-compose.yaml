@@ -1,16 +1,42 @@
+networks:
+  app-network:
+    driver: bridge
+
 services:
+  auth:
+    image: registry.gitlab.com/organisation/auth-service:${CI_COMMIT_REF_SLUG}
+    build:
+      context: ../auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    expose:
+      - "4000"
+    networks:
+      - app-network
+
   frontend:
     image: registry.gitlab.com/organisation/frontend-app:${CI_COMMIT_REF_SLUG}
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: frontend-app
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=production
+      - AUTH_URL=http://auth-service:4000/api/v1
+    depends_on:
+      - auth-service
     networks:
       - app-network
 
-networks:
-  app-network:
-    driver: bridge
+  # password:
+  #   image: registry.gitlab.com/organisation/password-service:${CI_COMMIT_REF_SLUG}
+  #   build:
+  #     context: ../password-service
+  #     dockerfile: Dockerfile
+  #   container_name: password-service
+  #   expose:
+  #     - "4001"
+  #   networks:
+  #     - app-network
