@@ -7,7 +7,7 @@
   # Starta ssh-agent
   - eval $(ssh-agent -s)
   # Lägg till privat SSH-nyckel från CI-variabeln
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - ssh-add "$SSH_PRIVATE_KEY"
   # Skapa ~/.ssh och sätt behörigheter
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
