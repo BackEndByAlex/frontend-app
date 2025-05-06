@@ -11,7 +11,7 @@
   - eval $(ssh-agent -s)
 
   # Add the SSH private key stored in the SSH_PRIVATE_KEY variable to the ssh-agent.
-  - echo "$SSH_PRIVATE_KEY" | ssh-add -
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
 
   # Create the .ssh directory and set the correct permissions.
   - mkdir -p ~/.ssh
@@ -40,7 +40,6 @@ build-job:
     - echo "Compiling the code..."
     - sleep 2 # Simulate compilation time.
     - echo "Compile complete."
-
   # only:
   #   - main
 
