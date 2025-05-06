@@ -50,29 +50,29 @@ build-job:
 # ─────────────────────────────────────────────────────────────
 # 2) Deploy-jobb: driftsätter via Docker-over-SSH → Docker Compose
 # ─────────────────────────────────────────────────────────────
-deploy-job:
+deploy_production_job:
   stage: deploy
-  # only:
-  #   - main
   environment:
     name: production
     url: http://$PRODUCTION_HOST
-  # Återanvänd SSH-setup från mallen
-  before_script:
+  variables:
     REMOTE_HOST: $PRODUCTION_HOST # Set the REMOTE_HOST variable for production.
     DOCKER_HOST: ssh://ubuntu@$PRODUCTION_HOST # Docker connection via SSH.
-    before_script: *before_script_ssh_setup
+  before_script: *before_script_ssh_setup # Reuse SSH setup steps.
+  # Stegen som körs på värdmaskinen via Docker-over-SSH
   script:
     - echo "Bygger om och startar upp i produktion..."
-    # Pekar Docker-CLI mot produktionsservern
+    # Peka Docker CLI mot fjärrvärden
     - export DOCKER_HOST="ssh://$DEPLOY_USER@$PRODUCTION_HOST"
-    # Dra senaste image och kör Compose
+    # Hämta senaste image och starta om containrarna
     - docker compose -f docker-compose.yaml \
                      -f docker-compose.production.yaml \
                      pull
     - docker compose -f docker-compose.yaml \
                      -f docker-compose.production.yaml \
                      up --build -d
+  # only:
+  #   - main # Only run this job on the main branch.
   # needs:
   #   - unit-test-job
   #   - lint-test-job
