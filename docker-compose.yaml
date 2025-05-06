@@ -26,7 +26,7 @@ services:
       - NODE_ENV=production
       - AUTH_URL=http://auth-service:4000/api/v1
     depends_on:
-      - auth-service
+      - auth
     networks:
       - app-network
 
