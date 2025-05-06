@@ -117,7 +117,7 @@ export async function postToPasswordService (endpoint, body, token) {
  * @returns {Promise<object>} - The response data.
  */
 export async function getFromPasswordService (endpoint, token) {
-  const res = await fetch(`${AUTH_URL}/${endpoint}`, {
+  const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`
