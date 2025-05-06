@@ -2,7 +2,7 @@ services:
   frontend:
     image: registry.gitlab.com/organisation/frontend-app:${CI_COMMIT_REF_SLUG}
     build:
-      context: ./frontend-app
+      context: .
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
