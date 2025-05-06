@@ -1,17 +1,23 @@
 # ─────────────────────────────────────────────────────────────
-# SSH-setup-anchor (endast i deploy-steget)
+# SSH-setup-anchor (används bara i deploy-steget)
 # ─────────────────────────────────────────────────────────────
 .before_script_ssh_setup: &before_script_ssh_setup
-  - apk add --no-cache openssh-client
+  # Se till att ssh-agent finns
+  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install -y openssh-client -y )
+  # Starta ssh-agent
   - eval $(ssh-agent -s)
+  # Lägg till privat SSH-nyckel från CI-variabeln
   - chmod 600 "$SSH_PRIVATE_KEY"
   - ssh-add "$SSH_PRIVATE_KEY"
-  - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+  # Skapa ~/.ssh och sätt behörigheter
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  # Lägg till värdservern i known_hosts
   - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 
 # ─────────────────────────────────────────────────────────────
-# Config-injektion-anchor (för build-steget)
+# Config-injektion-anchor (skapar config/.env och config/public.pem)
 # ─────────────────────────────────────────────────────────────
 .build_config: &build_config
   before_script:
@@ -20,37 +26,28 @@
     - echo "$PUBLIC_PEM"   > config/public.pem
 
 # ─────────────────────────────────────────────────────────────
-# Basimage och Docker-in-Docker-service för build
+# Basimage med Docker CLI
 # ─────────────────────────────────────────────────────────────
 image: docker:27-cli
 
-services:
-  - name: docker:27-dind
-    alias: docker
-
-variables:
-  DOCKER_TLS_CERTDIR: ""        # Stäng av TLS för DinD
-  DOCKER_HOST: tcp://docker:2375
-
+# ─────────────────────────────────────────────────────────────
+# Definiera pipelinens steg
+# ─────────────────────────────────────────────────────────────
 stages:
   - build
   - test
   - deploy
 
 # ─────────────────────────────────────────────────────────────
-# 1) Build-jobb: injicera config, bygg och pusha imagen
+# 1) Kompilera koden (med config-injektion om File-variabler används)
 # ─────────────────────────────────────────────────────────────
 build-job:
   stage: build
-  privileged: true
   <<: *build_config
   script:
-    - echo "Bygger frontend-imagen med Docker-in-Docker..."
-    - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
-    - docker login -u gitlab-ci-token -p "$CI_JOB_TOKEN" $CI_REGISTRY
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  only:
-    - main
+    - echo "Compiling the code..."
+    - sleep 2   # Simulerar byggtid
+    - echo "Compile complete."
 
 # ─────────────────────────────────────────────────────────────
 # 2) Unit-tester
@@ -58,8 +55,8 @@ build-job:
 unit-test-job:
   stage: test
   script:
-    - echo "Kör enhetstester..."
-    - sleep 2
+    - echo "Running unit tests... This will take about 60 seconds."
+    - sleep 2   # Simulerar testtid
     - echo "Code coverage is 90%"
 
 # ─────────────────────────────────────────────────────────────
@@ -68,17 +65,15 @@ unit-test-job:
 lint-test-job:
   stage: test
   script:
-    - echo "Lintar koden..."
-    - sleep 2
-    - echo "Inga lint-fel."
+    - echo "Linting code... This will take about 10 seconds."
+    - sleep 2   # Simulerar linttid
+    - echo "No lint issues found."
 
 # ─────────────────────────────────────────────────────────────
 # 4) Deploy till produktion via Docker-over-SSH
 # ─────────────────────────────────────────────────────────────
 deploy_production_job:
   stage: deploy
-  only:
-    - main
   environment:
     name: production
     url: http://$PRODUCTION_HOST
@@ -91,6 +86,8 @@ deploy_production_job:
   script:
     - echo "Deploying to production..."
     - docker compose -f docker-compose.yaml up --build -d
+  only:
+    - main
   needs:
     - unit-test-job
     - lint-test-job
