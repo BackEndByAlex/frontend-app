@@ -1,3 +1,13 @@
+image: docker:27-cli
+
+services:
+  - docker:27-dind
+
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_TLS_CERTDIR: ""
+
+
 # ─────────────────────────────────────────────────────────────
 # SSH-setup-anchor (används bara i deploy-steget)
 # ─────────────────────────────────────────────────────────────
@@ -28,7 +38,7 @@
 # ─────────────────────────────────────────────────────────────
 # Basimage med Docker CLI
 # ─────────────────────────────────────────────────────────────
-image: docker:27-cli
+
 
 # ─────────────────────────────────────────────────────────────
 # Definiera pipelinens steg
