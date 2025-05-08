@@ -80,7 +80,7 @@ export const handleGoogleLoginProxy = async (req, res) => {
     const { idToken } = req.body
 
     const { payload, token } = await authenticateGoogleUser(idToken)
-    console.log('Payload:', payload)
+    console.log('Payload:', payload, "undifin")
     console.log('Token:', token)
     req.session.user = {
       ...payload,
