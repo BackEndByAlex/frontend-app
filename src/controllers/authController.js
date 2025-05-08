@@ -88,7 +88,7 @@ export const handleGoogleLoginProxy = async (req, res) => {
     }
 
     req.session.isCodeVerified = false
-
+    console.log('Session:', req.session.user)
     await sendVerificationCode(idToken)
     console.log('Verification code sent.')
     req.flash('success', 'Google-inloggning lyckades!')
