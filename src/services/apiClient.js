@@ -116,21 +116,25 @@ export async function postToPasswordService (endpoint, body, token) {
  * @param {string} token - The authorization token.
  * @returns {Promise<object>} - The response data.
  */
-export async function getFromPasswordService (endpoint, token) {
+export async function getFromPasswordService(endpoint, token) {
   const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${token}`
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
     }
   })
 
-  const data = await res.json()
+  const text = await res.text()
 
   if (!res.ok) {
-    throw new Error(data.message || 'Fel vid hämtning från password-service')
+    // Om det inte är JSON så loggar vi hela svaret
+    console.error('[PASSWORD-SERVICE ERROR]', text)
+    const err = JSON.parse(text) // Kan kasta om det är HTML
+    throw new Error(err.message || 'Fel vid hämtning från password-service')
   }
 
-  return data
+  return JSON.parse(text)
 }
 
 export async function sendFeedback(message) {
