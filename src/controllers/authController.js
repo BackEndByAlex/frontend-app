@@ -80,7 +80,8 @@ export const handleGoogleLoginProxy = async (req, res) => {
     const { idToken } = req.body
 
     const { payload, token } = await authenticateGoogleUser(idToken)
-
+    console.log('Payload:', payload)
+    console.log('Token:', token)
     req.session.user = {
       ...payload,
       jwt: token
@@ -89,7 +90,7 @@ export const handleGoogleLoginProxy = async (req, res) => {
     req.session.isCodeVerified = false
 
     await sendVerificationCode(idToken)
-
+    console.log('Verification code sent.')
     req.flash('success', 'Google-inloggning lyckades!')
     res.status(200).json({ message: 'Session created' })
   } catch (err) {
