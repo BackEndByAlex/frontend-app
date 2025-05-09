@@ -16,8 +16,8 @@
       <!-- Navigering -->
       <nav class="sidebar-nav">
         <% if (typeof user !== 'undefined' && user) { %>
-          <button class="sidebar-btn" href="./dashboard">📂 Dashboard</button>
-          <button class="sidebar-btn" href="./setting">⚙️ Inställningar</button>
+          <a class="sidebar-btn" href="./dashboard">📂 Dashboard</a>
+          <a class="sidebar-btn" href="./setting">⚙️ Inställningar</a>
         <% } else { %>
           <a class="sidebar-btn" href="./register">📝 Registrera</a>
           <a class="sidebar-btn" href="./login">🔑 Logga in</a>
