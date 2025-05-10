@@ -134,6 +134,25 @@ export async function getFromPasswordService (endpoint, token) {
   return data
 }
 
+export async function changePasswordService(endpoint, body, token) {
+  const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
+    method:  'PUT',
+    headers: {
+      'Content-Type':  'application/json',
+      Authorization:   `Bearer ${token}`
+    },
+    body: JSON.stringify(body)
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || 'Fel vid PUT mot password-service');
+  }
+  
+  return data;
+}
+
 export async function sendFeedback(message) {
   const response = await fetch(`${AUTH_URL}/feedback`, {
     method: 'POST',

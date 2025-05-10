@@ -1,5 +1,5 @@
 import { generateStrongPassword } from '../utils/passwordGenerator.js'
-import { getFromPasswordService } from '../services/apiClient.js'
+import { getFromPasswordService, changePasswordService } from '../services/apiClient.js'
 
 
 /**
@@ -26,6 +26,7 @@ export async function renderPasswordDetail(req, res, next) {
       entry,
       hideHeader: true,
       isCodeVerified: req.session.isCodeVerified,
+      pageType: 'passwordDetail'
     })
   } catch (err) {
     if (err.message.includes('404')) {
@@ -36,6 +37,27 @@ export async function renderPasswordDetail(req, res, next) {
       return res.redirect('../login')
     }
     next(err)
+  }
+}
+
+
+export async function updatePassword(req, res, next) {
+  const token     = req.session.user.jwt;
+  const id        = req.params.id;
+  const { password } = req.body;
+
+  try {
+    await changePasswordService(
+      `passwords/${id}`,    // endpoint
+      { password },         // body
+      token                 // JWT
+    );
+
+    req.flash('success', 'Lösenordet har uppdaterats');
+    return res.redirect(`/passwords/${id}`);
+  } catch (err) {
+    req.flash('error', err.message);
+    return res.redirect(`/passwords/${id}`);
   }
 }
 

@@ -7,15 +7,34 @@
 <aside class="sidebar">
   <h2><a href="./">📘 TimeLock</a></h2>
   <nav class="sidebar-nav">
-    <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="generator">
-      🔐 Generera lösenord
-    </button>
-    <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="sparade">
-      📂 Sparade lösenord
-    </button>
-    <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="inställningar">
-      ⚙️ Inställningar
-    </button>
+    <% if (pageType === 'dashboard') { %>
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="generator">
+        🔐 Generera lösenord
+      </button>
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="sparade">
+        📂 Sparade lösenord
+      </button>
+      <button class="sidebar-btn" data-target="inställningar">
+        ⚙️ Inställningar
+      </button>
+
+    <% } else if (pageType === 'passwordDetail') { %>
+      <a href="./dashboard" class="sidebar-btn">
+        ← Tillbaka
+      </a>
+      <a href="./passwords/<%= entry._id %>/edit" class="sidebar-btn">
+        ✏️ Ändra
+      </a>
+      <button type="button" id="show-history" class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>">
+        📂 Historik
+      </button>
+      <form action="./passwords/<%= entry._id %>/delete" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="sidebar-btn btn-danger">
+          🗑️ Ta bort
+        </button>
+      </form>
+    <% } %>
   </nav>
   <div class="sidebar-footer">
     <div class="user-info">

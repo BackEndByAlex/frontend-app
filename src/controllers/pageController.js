@@ -48,6 +48,7 @@ export const renderDashboard = (req, res) => {
     user,
     isCodeVerified,
     hideHeader: true,
+    pageType: 'dashboard'
   })
 }
 
@@ -128,7 +129,8 @@ export const renderPassword = async (req, res) => {
     csrfToken: req.csrfToken(),
     passwords,
     isCodeVerified: req.session.isCodeVerified,
-    hideHeader: true
+    hideHeader: true,
+    pageType: 'dashboard'
   })
 }
 
