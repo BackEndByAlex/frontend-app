@@ -1,0 +1,65 @@
+<link rel="stylesheet" href="./css/details.css">
+
+<script type="module" src="/js/sidebarToggle.js"></script>
+<script type="module" src="/js/password.js"></script>
+<script type="module" src="/js/logout.js"></script>
+
+<button class="menu-toggle" aria-label="Öppna meny">☰</button>
+  <%- include('../dashboard/sidebar', { user: user, csrfToken: csrfToken, isCodeVerified: isCodeVerified }) %>
+  <%- include('../partials/flashmeddelande') %>
+
+<div class="dashboard-layout">
+
+  <main class="dashboard-content">
+    <div class="password-detail-card">
+      <h1>Detaljer för <%= entry.service %></h1>
+
+      <!-- Slå in fältet i ett formulär utan action så att det inte submit:ar någonstans -->
+      <form class="password-detail-form" novalidate>
+        <div class="password-field">
+          <input
+            type="password"
+            id="detail-password"
+            value="<%= entry.password %>"
+            readonly
+            autocomplete="current-password"
+          />
+          <button
+            type="button"
+            id="toggle-password-visibility"
+            class="icon-btn"
+            aria-label="Visa/göm lösenord"
+          >👁️</button>
+          <button
+            type="button"
+            id="copy-password"
+            class="icon-btn"
+            aria-label="Kopiera lösenord"
+          >📋</button>
+        </div>
+      </form>
+
+      <div class="detail-actions">
+        <a href="./dashboard" class="btn-secondary">← Tillbaka</a>
+        <a href="./passwords/<%= entry._id %>/edit" class="btn-primary">Ändra lösenord</a>
+        <form action="./passwords/<%= entry._id %>/delete" method="POST">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="btn-danger">Ta bort</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- <button type="button" id="toggle-password-visibility" class="icon-btn">
+   Öga SVG
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 5c-7.633 0-11 7-11 7s3.367 7 11 7 11-7 11-7-3.367-7-11-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"/>
+  </svg>
+</button>
+<button type="button" id="copy-password" class="icon-btn">
+  Kopiera SVG 
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M19 21H9c-1.1 0-2-.9-2-2v-10h2v10h10v2zM15 17H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zm0-12H5v10h10V5z"/>
+  </svg>
+</button> -->

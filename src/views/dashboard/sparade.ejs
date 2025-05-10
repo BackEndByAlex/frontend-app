@@ -1,0 +1,29 @@
+<section id="sparade" class="dashboard-section">
+  <% if (Array.isArray(passwords) && passwords.length > 0) { %>
+    <div class="saved-passwords">
+      <h3>Sparade lösenord</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Tjänst</th>
+            <th>Lösenord</th>
+            <th>Åtgärd</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% passwords.forEach(entry => { %>
+            <tr>
+              <td><%= entry.service %></td>
+              <td>••••••••</td>
+              <td>
+                <a href="./passwords/<%= entry._id %>" class="sidebar-btn">🔍 Visa</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <p>Inga sparade lösenord ännu.</p>
+  <% } %>
+</section>

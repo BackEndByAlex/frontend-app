@@ -20,33 +20,27 @@ import {
 
 import { getFirebaseConfig } from '../controllers/fireBaseController.js'
 import { requireAuth } from '../authMiddleware/authMiddleware.js'
-import { generatePassword } from '../controllers/passwordController.js'
+import { generatePassword, renderPasswordDetail } from '../controllers/passwordController.js'
 import { savePassword } from '../controllers/savePasswordController.js'
 import { sendFeedbackToAuth } from "../controllers/feedbackController.js"
 
 export const router = express.Router()
-
 router.get('/', renderHome)
 
 router.get('/login', renderLogin)
-
 router.get('/firebase-config', getFirebaseConfig)
 router.get('/register', renderRegister)
 router.get('/check-session', checkSession)
 router.post('/google/proxy', handleGoogleLoginProxy)
-
 router.get('/dashboard', requireAuth, renderSmartDashboard)
 router.get('/generate-password', generatePassword)
+router.get('/passwords/:id', requireAuth, renderPasswordDetail)
 
 router.post('/register', handleFormRegistration)
 router.post('/auth/google', handleGoogleLoginProxy)
 router.post('/auth/login', handleFormLogin)
-
 router.post('/save-password', requireAuth, savePassword)
-
 router.post('/logout', logout)
-
 router.post('/verify-code', postVerifyCode)
-
 router.post('/feedback/send', sendFeedbackToAuth)
 

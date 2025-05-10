@@ -40,12 +40,23 @@ body.sidebar-visible .feedback-display {
   transition: margin 0.3s ease;
 }
 
+.password-detail-card {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
 .auth-section {
   margin-left: 240px;
   transition: margin 0.3s ease;
 }
 
 @media screen and (max-width: 900px) {
+
+  .password-detail-card {
+  margin-left: 0px;
+  transition: margin 0.3s ease;
+  }
+
   body.sidebar-visible .feedback-display {
     margin-left: 0;
     transition: margin 0.3s ease;
