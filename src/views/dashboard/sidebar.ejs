@@ -22,9 +22,12 @@
       <a href="./dashboard" class="sidebar-btn">
         ← Tillbaka
       </a>
-      <a href="./passwords/<%= entry._id %>/edit" class="sidebar-btn">
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="showpassword">
+        ✏️ Vissa lösenord
+      </button>
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="change">
         ✏️ Ändra
-      </a>
+      </button>
       <button type="button" id="show-history" class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>">
         📂 Historik
       </button>
