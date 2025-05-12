@@ -6,7 +6,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
   min-height: calc(100vh - 0px);
   background-color: #0f172a;
 }
