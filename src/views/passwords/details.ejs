@@ -22,5 +22,8 @@
 
     <!-- Inkludera historikpartial -->
     <%- include('./history', { entry: entry, history: history, csrfToken: csrfToken }) %>
+
+    <!-- Inkludera inställningarpartial -->
+    <%- include('./deletePassword', { entry, history, csrfToken }) %>
   </main>
 </div>

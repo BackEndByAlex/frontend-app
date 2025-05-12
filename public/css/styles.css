@@ -54,6 +54,11 @@ body.sidebar-visible .feedback-display {
   transition: margin 0.3s ease;
 }
 
+.info-card {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
 @media screen and (max-width: 900px) {
 
   .password-detail-card {
@@ -73,5 +78,10 @@ body.sidebar-visible .feedback-display {
   .dashboard-section#history {
   margin-left: 0px;
   transition: margin 0.3s ease;
-}
+  }
+
+  .info-card {
+  margin-left: 0px;
+  transition: margin 0.3s ease;
+  }
 }

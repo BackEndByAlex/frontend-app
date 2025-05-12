@@ -1,5 +1,5 @@
 import { generateStrongPassword } from '../utils/passwordGenerator.js'
-import { getFromPasswordService, changePasswordService } from '../services/apiClient.js'
+import { getFromPasswordService, changePasswordService, deletePasswordService } from '../services/apiClient.js'
 
 /**
  * Generates a strong password and sends it in the response.
@@ -76,5 +76,26 @@ export async function updatePassword (req, res, next) {
   } catch (err) {
     req.flash('error', err.message)
     return res.redirect(`./passwords/${id}`)
+  }
+}
+
+/**
+ * Deletes a password entry by ID.
+ *
+ * @param {object} req - The request object containing session and params data.
+ * @param {object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>} - A promise that resolves when the password is deleted.
+ */
+export async function deletePassword (req, res, next) {
+  const token = req.session.user.jwt
+  const { id } = req.params
+  try {
+    await deletePasswordService(`passwords/${id}`, token)
+    req.flash('success', 'Lösenordet har tagits bort')
+    return res.redirect('../../dashboard')
+  } catch (err) {
+    req.flash('error', err.message)
+    return res.redirect(`../../passwords/${id}`)
   }
 }
