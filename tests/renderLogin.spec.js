@@ -1,4 +1,3 @@
-// tests/renderLogin.spec.js
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderLogin } from '../src/controllers/authController.js'
 

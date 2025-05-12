@@ -49,12 +49,6 @@ unit-test-job:
   script:
     - npm ci
     - npm run test:unit   # se till att "test:unit" kör Vitest
-  artifacts:
-    paths:
-      - junit.xml
-      - coverage/
-    reports:
-      junit: junit.xml
 
 # ─────────────────────────────────────────────────────────────
 # 3) Lint
