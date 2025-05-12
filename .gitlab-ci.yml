@@ -45,10 +45,16 @@ build-job:
 # ─────────────────────────────────────────────────────────────
 unit-test-job:
   stage: test
+  image: node:18-alpine
   script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 2   # Simulerar testtid
-    - echo "Code coverage is 90%"
+    - npm ci
+    - npm run test:unit   # se till att "test:unit" kör Vitest
+  artifacts:
+    paths:
+      - junit.xml
+      - coverage/
+    reports:
+      junit: junit.xml
 
 # ─────────────────────────────────────────────────────────────
 # 3) Lint
