@@ -7,6 +7,9 @@ import {
 import { fetchFirebaseConfig } from './api.js'
 import { onDomReady } from './utils.js'
 
+/**
+ * Initializes Firebase authentication and sets up Google login button event.
+ */
 async function main () {
   const firebaseConfig = await fetchFirebaseConfig()
   const app = initializeApp(firebaseConfig)

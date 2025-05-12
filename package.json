@@ -10,7 +10,7 @@
     "dev": "nodemon ./src/server.js",
     "lint": "eslint ./src ./public || exit 0",
     "lint:fix": "eslint ./src ./public --fix || exit 0",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "author": "Alexandru C.A",
   "license": "ISC",

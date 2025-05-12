@@ -94,4 +94,3 @@ export const handleGoogleLoginProxy = async (req, res) => {
     res.status(403).json({ error: 'Google-login misslyckades' })
   }
 }
-

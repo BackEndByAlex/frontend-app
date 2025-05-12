@@ -2,7 +2,7 @@ setInterval(async () => {
   try {
     const res = await fetch('./check-session', { credentials: 'include' })
     if (res.status === 401) {
-      req.flash('error', 'Session expired')
+      alert('Session expired')
       window.location.href = './login/'
     }
   } catch (err) {

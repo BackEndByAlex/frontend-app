@@ -1,7 +1,6 @@
 import { generateStrongPassword } from '../utils/passwordGenerator.js'
 import { getFromPasswordService, changePasswordService } from '../services/apiClient.js'
 
-
 /**
  * Generates a strong password and sends it in the response.
  *
@@ -13,20 +12,27 @@ export const generatePassword = (req, res) => {
   res.status(200).json({ password })
 }
 
-
-export async function renderPasswordDetail(req, res, next) {
+/**
+ * Renders the password detail page with entry and history data.
+ *
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>} - A promise that resolves when the response is sent.
+ */
+export async function renderPasswordDetail (req, res, next) {
   const token = req.session.user?.jwt
-  const id    = req.params.id
+  const id = req.params.id
 
   try {
     const entry = await getFromPasswordService(`passwords/${id}`, token)
 
-    const history = await getFromPasswordService(`passwords/${id}/history`, token);
-    console.log("History data fetched:", history);
+    const history = await getFromPasswordService(`passwords/${id}/history`, token)
+    console.log('History data fetched:', history)
 
     return res.render('./passwords/details', {
-      user:       req.session.user,
-      csrfToken:  req.csrfToken(),
+      user: req.session.user,
+      csrfToken: req.csrfToken(),
       entry,
       history,
       hideHeader: true,
@@ -45,24 +51,30 @@ export async function renderPasswordDetail(req, res, next) {
   }
 }
 
-
-export async function updatePassword(req, res, next) {
-  const token     = req.session.user.jwt;
-  const id        = req.params.id;
-  const { password } = req.body;
+/**
+ * Updates the password for a specific entry.
+ *
+ * @param {object} req - The request object containing session and body data.
+ * @param {object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>} - A promise that resolves when the password is updated.
+ */
+export async function updatePassword (req, res, next) {
+  const token = req.session.user.jwt
+  const id = req.params.id
+  const { password } = req.body
 
   try {
     await changePasswordService(
-      `passwords/${id}`,    // endpoint
-      { password },         // body
-      token                 // JWT
-    );
+      `passwords/${id}`,
+      { password },
+      token
+    )
 
-    req.flash('success', 'Lösenordet har uppdaterats');
-    return res.redirect(`../../passwords/${id}`);
+    req.flash('success', 'Lösenordet har uppdaterats')
+    return res.redirect(`../../passwords/${id}`)
   } catch (err) {
-    req.flash('error', err.message);
-    return res.redirect(`./passwords/${id}`);
+    req.flash('error', err.message)
+    return res.redirect(`./passwords/${id}`)
   }
 }
-

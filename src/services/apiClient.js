@@ -134,26 +134,40 @@ export async function getFromPasswordService (endpoint, token) {
   return data
 }
 
-export async function changePasswordService(endpoint, body, token) {
+/**
+ * Sends a PUT request to the password-service.
+ *
+ * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'change-password').
+ * @param {object} body - The request body.
+ * @param {string} token - The authorization token.
+ * @returns {Promise<object>} - The response data.
+ */
+export async function changePasswordService (endpoint, body, token) {
   const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
-    method:  'PUT',
+    method: 'PUT',
     headers: {
-      'Content-Type':  'application/json',
-      Authorization:   `Bearer ${token}`
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(body)
-  });
+  })
 
-  const data = await res.json();
+  const data = await res.json()
 
   if (!res.ok) {
-    throw new Error(data.message || 'Fel vid PUT mot password-service');
+    throw new Error(data.message || 'Fel vid PUT mot password-service')
   }
-  
-  return data;
+
+  return data
 }
 
-export async function sendFeedback(message) {
+/**
+ * Sends feedback to the auth-service.
+ *
+ * @param {string} message - The feedback message to send.
+ * @returns {Promise<void>} - Resolves when the feedback is successfully sent.
+ */
+export async function sendFeedback (message) {
   const response = await fetch(`${AUTH_URL}/feedback`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -163,7 +177,12 @@ export async function sendFeedback(message) {
   if (!response.ok) throw new Error('Misslyckades att skicka feedback')
 }
 
-export async function fetchAllFeedback() {
+/**
+ * Fetches all feedback from the auth-service.
+ *
+ * @returns {Promise<object[]>} - A promise that resolves to an array of feedback objects.
+ */
+export async function fetchAllFeedback () {
   const response = await fetch(`${AUTH_URL}/feedback-get-all`)
   if (!response.ok) throw new Error('Kunde inte hämta feedback')
   return await response.json()

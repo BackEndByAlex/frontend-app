@@ -55,10 +55,11 @@ unit-test-job:
 # ─────────────────────────────────────────────────────────────
 lint-test-job:
   stage: test
+  image: node:18-alpine
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 2   # Simulerar linttid
-    - echo "No lint issues found."
+    - npm ci
+    - npm run lint
+  allow_failure: false
 
 # ─────────────────────────────────────────────────────────────
 # 4) Deploy till produktion via Docker-over-SSH

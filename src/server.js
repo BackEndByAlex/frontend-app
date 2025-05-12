@@ -30,14 +30,10 @@ try {
   const app = express()
   app.use(express.json())
 
-
   app.set('trust proxy', 1)
-
-    // Body parsing BEFORE csrf!
 
   // Set the base URL to use for all relative URLs in a document.
   const baseURL = process.env.BASE_URL || '/'
-
 
   // 1. Security headers
   app.use(
@@ -105,8 +101,7 @@ try {
       req.path.startsWith('/auth/google') ||
       req.path.startsWith('/firebase-config') ||
       req.path.startsWith('/TimeLock/google/proxy')
-    ) 
-    {
+    ) {
       return next()
     }
     csrfProtection(req, res, next)
