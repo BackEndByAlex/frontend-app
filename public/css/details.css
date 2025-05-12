@@ -1,0 +1,38 @@
+.dashboard-layout {
+  display: flex;
+}
+
+.dashboard-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  min-height: calc(100vh - 0px);
+  background-color: #0f172a;
+}
+
+.dashboard-section {
+  display: none;
+}
+.dashboard-section.active {
+  display: block;
+}
+
+.password-detail-card,
+.change-password-form {
+  max-width: 600px;
+  padding: 2rem;
+  background-color: #1e293b;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.password-detail-card h1 {
+  font-size: 2rem;
+  text-align: center;
+  color: #38bdf8;
+  margin: 0;
+}
+

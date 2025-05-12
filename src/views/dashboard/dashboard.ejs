@@ -1,129 +1,18 @@
 <link rel="stylesheet" href="./css/dashboard.css">
-<link rel="stylesheet" href="./css/sidebar.css">
-<script type="module" src="./js/password.js"></script>
 <script type="module" src="./js/checkSession.js"></script>
-<script type="module" src="./js/sidebar.js"></script>
-<script type="module" src="./js/logout.js"></script>
-<script type="module" src="./js/sidebarToggle.js"></script>
 
-<div class="dashboard-layout">
-  <!-- SIDEBAR -->
-  <button class="menu-toggle" aria-label="Öppna meny">☰</button>
-  <aside class="sidebar">
-    <h2><a href="./">📘 TimeLock</a></h2>
-    <nav class="sidebar-nav">
-      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="generator">🔐 Generera lösenord</button>
-      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="sparade">📂 Sparade lösenord</button>
-      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="inställningar">⚙️ Inställningar</button>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="user-info">
-        <div class="avatar">👤</div>
-        <div class="user-details">
-          <span class="user-name"><%= user?.name %></span>
-          
-          <% if (isCodeVerified) { %>
-            <span class="verified-status">✔ Verifierad</span>
-          <% } else { %>
-            <span class="unverified-status">⛔ Ej verifierad</span>
-          <% } %>
-          
-          <form id="logout-form" method="POST" action="./logout">
-            <input type="hidden" id="csrfToken" name="_csrf" value="<%= csrfToken %>">
-            <button type="submit" class="btn-logout">Logga ut</button>
-          </form>
-        </div>
-      </div>
-    </div>    
-  </aside>
+<button class="menu-toggle" aria-label="Öppna meny">☰</button>
+<%- include('./sidebar') %>
+<%- include('../partials/flashmeddelande') %>
 
-  <!-- HUVUDINNEHÅLL -->
-  <main class="dashboard-content">
-    <%- include('../partials/flashmeddelande') %>
-    <h1>Välkommen, <%= user?.name %> 👋</h1>
+<main class="dashboard-content">
+  <h1>Välkommen, <%= user?.name %> 👋</h1>
 
-    <% if (!isCodeVerified) { %>
-      <section id="verifiering" class="dashboard-section active">
-        <div class="dashboard-card">
-          <h2>Verifiera din kod</h2>
-          <form action="./verify-code" method="POST" class="verify-form">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <input type="text" name="code" placeholder="Ange din kod här" required />
-            <button type="submit" class="btn-primary">Verifiera</button>
-          </form>
-        </div>
-      </section>
-    <% } else { %>
-
-      <!-- GENERERA LÖSENORD -->
-      <section id="generator" class="dashboard-section active">
-        <div class="dashboard-card">
-          <h2>Generera ett säkert lösenord</h2>
-          <div class="password-generator">
-            <div class="password-input-wrapper">
-              <input type="text" id="generated-password" readonly placeholder="Här kommer ditt lösenord..." />
-              <div class="password-icons">
-                <button type="button" id="toggle-password-visibility" class="icon-btn">
-                  <!-- Öga SVG -->
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 5c-7.633 0-11 7-11 7s3.367 7 11 7 11-7 11-7-3.367-7-11-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"/>
-                  </svg>
-                </button>
-                <button type="button" id="copy-password" class="icon-btn">
-                  <!-- Kopiera SVG -->
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 21H9c-1.1 0-2-.9-2-2v-10h2v10h10v2zM15 17H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zm0-12H5v10h10V5z"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <form id="save-password-form" action="./save-password" method="POST" class="save-password-form">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-              <input type="text" name="service" placeholder="Tjänstens namn" required>
-              <input type="text" name="username" placeholder="Användarnamn för tjänsten" required>
-              <input type="text" id="password-field" name="password" placeholder="Här kommer ditt lösenord..." required>
-              <div class="password-buttons">
-                <button type="button" id="generate-password" class="btn-primary">Generera lösenord</button>
-                <button type="submit" class="btn-success">Spara lösenord</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      <!-- SPARADE LÖSENORD -->
-      <section id="sparade" class="dashboard-section">
-        <% if (typeof passwords !== 'undefined' && passwords.length > 0) { %>
-          <div class="saved-passwords">
-            <h3>Sparade lösenord</h3>
-            <table>
-              <thead>
-                <tr><th>Tjänst</th><th>Lösenord</th></tr>
-              </thead>
-              <tbody>
-                <% passwords.forEach(entry => { %>
-                  <tr>
-                    <td><%= entry.service %></td>
-                    <td><%= entry.password %></td>
-                  </tr>
-                <% }) %>
-              </tbody>
-            </table>
-          </div>
-        <% } else { %>
-          <p>Inga sparade lösenord ännu.</p>
-        <% } %>
-      </section>
-
-      <!-- INSTÄLLNINGAR -->
-      <section id="inställningar" class="dashboard-section">
-        <div class="dashboard-card">
-          <h2>Inställningar</h2>
-          <p>Inställningar kommer snart...</p>
-        </div>
-      </section>
-
-    <% } %>
-  </main>
-</div>
+  <% if (!isCodeVerified) { %>
+    <%- include('./verifiering') %>
+  <% } else { %>
+    <%- include('./generator') %>
+    <%- include('./sparade') %>
+    <%- include('./inställningar') %>
+  <% } %>
+</main>

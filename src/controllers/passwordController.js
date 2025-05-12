@@ -1,4 +1,6 @@
 import { generateStrongPassword } from '../utils/passwordGenerator.js'
+import { getFromPasswordService, changePasswordService } from '../services/apiClient.js'
+
 
 /**
  * Generates a strong password and sends it in the response.

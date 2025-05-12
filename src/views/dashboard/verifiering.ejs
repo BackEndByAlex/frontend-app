@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="./css/verifiering.css">
+
+<section id="verifiering" class="dashboard-section active">
+  <div class="dashboard-card">
+    <h2>Verifiera din kod</h2>
+    <form action="./verify-code" method="POST" class="verify-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="text" name="code" placeholder="Ange din kod här" required>
+      <button type="submit" class="btn-primary">Verifiera</button>
+    </form>
+  </div>
+</section>
