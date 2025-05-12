@@ -105,7 +105,6 @@ try {
       req.path.startsWith('/auth/google') ||
       req.path.startsWith('/firebase-config') ||
       req.path.startsWith('/TimeLock/google/proxy') ||
-      req.path === '/favicon.ico'
     ) {
       return next()
     }
