@@ -59,10 +59,10 @@ export async function updatePassword(req, res, next) {
     );
 
     req.flash('success', 'Lösenordet har uppdaterats');
-    return res.redirect(`/passwords/${id}`);
+    return res.redirect(`./passwords/${id}`);
   } catch (err) {
     req.flash('error', err.message);
-    return res.redirect(`/passwords/${id}`);
+    return res.redirect(`./passwords/${id}`);
   }
 }
 
