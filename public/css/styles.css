@@ -35,6 +35,11 @@ main {
   background-color: #012f5f;
 }
 
+.dashboard-layout > .dashboard-section {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
 body.sidebar-visible .feedback-display {
   margin-left: 240px;
   transition: margin 0.3s ease;

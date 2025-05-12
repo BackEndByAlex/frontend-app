@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="./css/details.css">
+
+<script type="module" src="./js/sidebarToggle.js"></script>
+
+<button class="menu-toggle" aria-label="Öppna meny">☰</button>
+<%- include('../partials/flashmeddelande') %>
+
+
+  <div class="dashboard-layout">
+  <%- include('../dashboard/sidebar', {
+        user: user,
+        csrfToken: csrfToken,
+        isCodeVerified: isCodeVerified
+     }) %>
+
+  <main class="dashboard-content">
+    <!-- Inkludera visningspartial -->
+    <%- include('./showPassword', { entry: entry, csrfToken: csrfToken }) %>
+
+    <!-- Inkludera ändringspartial -->
+    <%- include('./changePassword', { entry: entry, csrfToken: csrfToken }) %>
+
+    <!-- Inkludera historikpartial -->
+    <%- include('./history', { entry: entry, history: history, csrfToken: csrfToken }) %>
+  </main>
+</div>
