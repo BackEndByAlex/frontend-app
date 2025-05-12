@@ -36,7 +36,7 @@ export async function renderPasswordDetail(req, res, next) {
   } catch (err) {
     if (err.message.includes('404')) {
       req.flash('error', 'Lösenordet kunde inte hittas.')
-      return res.redirect('../../dashboard')
+      return res.redirect('../dashboard')
     } else if (err.message.includes('401')) {
       req.flash('error', 'Sessionen har gått ut. Logga in igen.')
       return res.redirect('../login')
@@ -59,7 +59,7 @@ export async function updatePassword(req, res, next) {
     );
 
     req.flash('success', 'Lösenordet har uppdaterats');
-    return res.redirect(`./passwords/${id}`);
+    return res.redirect(`../../passwords/${id}`);
   } catch (err) {
     req.flash('error', err.message);
     return res.redirect(`./passwords/${id}`);
