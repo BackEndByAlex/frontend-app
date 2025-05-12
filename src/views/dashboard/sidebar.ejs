@@ -28,7 +28,7 @@
       <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="change">
         ✏️ Ändra
       </button>
-      <button type="button" id="show-history" class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>">
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="history">
         📂 Historik
       </button>
       <form action="./passwords/<%= entry._id %>/delete" method="POST">

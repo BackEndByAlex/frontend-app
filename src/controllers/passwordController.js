@@ -20,10 +20,15 @@ export async function renderPasswordDetail(req, res, next) {
 
   try {
     const entry = await getFromPasswordService(`passwords/${id}`, token)
+
+    const history = await getFromPasswordService(`passwords/${id}/history`, token);
+    console.log("History data fetched:", history);
+
     return res.render('./passwords/details', {
       user:       req.session.user,
       csrfToken:  req.csrfToken(),
       entry,
+      history,
       hideHeader: true,
       isCodeVerified: req.session.isCodeVerified,
       pageType: 'passwordDetail'

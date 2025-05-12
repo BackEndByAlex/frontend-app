@@ -20,7 +20,7 @@ import {
 
 import { getFirebaseConfig } from '../controllers/fireBaseController.js'
 import { requireAuth } from '../authMiddleware/authMiddleware.js'
-import { generatePassword, renderPasswordDetail, updatePassword  } from '../controllers/passwordController.js'
+import { generatePassword, renderPasswordDetail, updatePassword } from '../controllers/passwordController.js'
 import { savePassword } from '../controllers/savePasswordController.js'
 import { sendFeedbackToAuth } from "../controllers/feedbackController.js"
 
@@ -35,7 +35,6 @@ router.post('/google/proxy', handleGoogleLoginProxy)
 router.get('/dashboard', requireAuth, renderSmartDashboard)
 router.get('/generate-password', generatePassword)
 router.get('/passwords/:id', requireAuth, renderPasswordDetail)
-
 
 router.post('/passwords/:id/change', requireAuth, updatePassword)
 

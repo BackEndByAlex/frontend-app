@@ -19,5 +19,8 @@
 
     <!-- Inkludera ändringspartial -->
     <%- include('./changePassword', { entry: entry, csrfToken: csrfToken }) %>
+
+    <!-- Inkludera historikpartial -->
+    <%- include('./history', { entry: entry, history: history, csrfToken: csrfToken }) %>
   </main>
 </div>
