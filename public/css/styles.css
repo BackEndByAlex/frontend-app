@@ -35,7 +35,7 @@ main {
   background-color: #012f5f;
 }
 
-.dashboard-layout > .dashboard-section {
+.dashboard-section#history {
   margin-left: 240px;
   transition: margin 0.3s ease;
 }
@@ -67,7 +67,12 @@ body.sidebar-visible .feedback-display {
     transition: margin 0.3s ease;
   }
   .auth-section {
-    margin-left: 0; /* Ingen marginal på små skärmar */
+    margin-left: 0;
     transition: margin 0.3s ease;
   }
+
+  .dashboard-section#history {
+  margin-left: 0px;
+  transition: margin 0.3s ease;
+}
 }
