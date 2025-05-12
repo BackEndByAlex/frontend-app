@@ -104,8 +104,9 @@ try {
       req.path.startsWith('/api/') ||
       req.path.startsWith('/auth/google') ||
       req.path.startsWith('/firebase-config') ||
-      req.path.startsWith('/TimeLock/google/proxy') ||
-    ) {
+      req.path.startsWith('/TimeLock/google/proxy')
+    ) 
+    {
       return next()
     }
     csrfProtection(req, res, next)
