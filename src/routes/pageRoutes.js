@@ -37,12 +37,9 @@ router.post('/google/proxy', handleGoogleLoginProxy)
 
 router.get('/dashboard', requireAuth, renderSmartDashboard)
 router.get('/generate-password', generatePassword)
-<<<<<<< HEAD
-=======
 router.get('/passwords/:id', requireAuth, renderPasswordDetail)
 
 router.post('/passwords/:id/change', requireAuth, updatePassword)
->>>>>>> dd2163c (funtionality and design for history pop up working.)
 
 router.post('/register', handleFormRegistration)
 router.post('/auth/google', handleGoogleLoginProxy)
