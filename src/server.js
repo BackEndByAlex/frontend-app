@@ -13,7 +13,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import helmet from 'helmet'
 import session from 'express-session'
-import { router as routes } from './routes/pageRoutes.js'
+import router from './routes/pageRoutes.js'
 import { sessionOptions } from './config/sessionOptions.js'
 import { logger } from './config/winston.js'
 import rateLimit from 'express-rate-limit'
@@ -118,7 +118,7 @@ try {
   // 8. Static files
   app.use(express.static(join(directoryFullName, '..', 'public')))
 
-  // 9. Rate limiter BEFORE routes
+  // 9. Rate limiter BEFORE router
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minuter
     max: 100, // max 100 requests per 15 min
@@ -140,8 +140,8 @@ try {
     next()
   })
 
-  // 12. Register routes
-  app.use('/', routes)
+  // 12. Register router
+  app.use('/', router)
 
   app.use((req, res, next) => {
     res.status(404).render('./error/404', { title: '404' })
