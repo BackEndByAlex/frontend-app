@@ -23,6 +23,12 @@ import { requireAuth } from '../authMiddleware/authMiddleware.js'
 import { generatePassword, renderPasswordDetail, updatePassword, deletePassword } from '../controllers/passwordController.js'
 import { savePassword } from '../controllers/savePasswordController.js'
 import { sendFeedbackToAuth } from '../controllers/feedbackController.js'
+import {
+  getForgotPassword,
+  postForgotPassword,
+  getResetPassword,
+  postResetPassword
+} from '../controllers/forgetPassowrdController.js'
 
 export const router = express.Router()
 router.get('/', renderHome)
@@ -36,6 +42,16 @@ router.get('/dashboard', requireAuth, renderSmartDashboard)
 router.get('/generate-password', generatePassword)
 router.get('/passwords/:id', requireAuth, renderPasswordDetail)
 router.post('/passwords/:id/delete', requireAuth, deletePassword)
+
+router
+  .route('/forgot-password')
+  .get(getForgotPassword)
+  .post(postForgotPassword)
+
+router
+  .route('/reset-password')
+  .get(getResetPassword)
+  .post(postResetPassword)
 
 router.post('/passwords/:id/change', requireAuth, updatePassword)
 

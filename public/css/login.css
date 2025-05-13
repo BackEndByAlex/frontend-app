@@ -95,3 +95,16 @@ body {
   text-decoration: underline;
   color: #0ea5e9;
 }
+
+.forgot-password {
+  margin-top: 0.5rem;
+  text-align: right;
+}
+.forgot-password a {
+  font-size: 0.9rem;
+  color: #007bff;
+  text-decoration: none;
+}
+.forgot-password a:hover {
+  text-decoration: none;
+}
