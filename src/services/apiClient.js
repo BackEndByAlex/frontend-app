@@ -72,7 +72,8 @@ export async function postToAuthService (endpoint, body) {
     const data = await response.json()
 
     if (!response.ok) {
-      throw new Error(data.message || 'Något gick fel mot auth-service')
+      const errMsg = data.error || data.message || 'Något gick fel mot auth-service'
+      throw new Error(errMsg)
     }
 
     return data
