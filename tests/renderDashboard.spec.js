@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderDashboard } from '../src/controllers/pageController.js'
+import { renderDashboard } from '../src/controllers/page/renderDashboardController.js'
 
 describe('renderDashboard', () => {
   let req, res

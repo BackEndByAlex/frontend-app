@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderLogin } from '../src/controllers/authController.js'
+import { renderLogin } from '../src/controllers/auth/loginController.js'
 
 describe('renderLogin', () => {
   let req

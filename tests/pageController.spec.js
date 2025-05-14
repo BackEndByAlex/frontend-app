@@ -1,6 +1,6 @@
 // tests/pageController.spec.js
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { checkSession } from '../src/controllers/pageController.js'
+import { checkSession } from '../src/controllers/page/checkSessionController.js'
 
 describe('checkSession', () => {
   let req, res

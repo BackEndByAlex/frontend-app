@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { generatePassword } from '../src/controllers/passwordController.js'
+import { generatePassword } from '../src/controllers/password/generatePasswordController.js'
 import * as pwGen from '../src/utils/passwordGenerator.js'
 
 describe('generatePassword', () => {

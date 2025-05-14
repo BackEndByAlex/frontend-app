@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getFirebaseConfig } from '../src/controllers/fireBaseController.js'
+import { getFirebaseConfig } from '../src/controllers/firebase/getFirebaseConfigController.js'
 describe('getFirebaseConfig', () => {
   let req, res
 
