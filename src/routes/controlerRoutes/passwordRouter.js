@@ -1,4 +1,3 @@
-// src/routes/passwordRouter.js
 import express from 'express'
 import { generatePassword } from '../../controllers/password/generatePasswordController.js'
 import { savePassword } from '../../controllers/password/savePasswordController.js'
