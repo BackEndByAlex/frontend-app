@@ -1,5 +1,6 @@
-import { authenticateGoogleUser, sendVerificationCode } from '../../services/authService.js'
 import { logger } from '../../config/winston.js'
+import { authenticateGoogleUser } from '../../services/auth/authenticateGoogleUser.js'
+import { sendVerificationCode } from '../../services/auth/sendVerificationCode.js'
 
 /**
  * Handles Google login by authenticating the user, storing session data,

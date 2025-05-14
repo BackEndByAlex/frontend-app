@@ -1,4 +1,4 @@
-import { deletePasswordService } from '../../services/apiClient.js'
+import { deletePasswordService } from '../../services/password/deletePasswordService.js'
 
 /**
  * Deletes a password entry by ID.

@@ -1,5 +1,5 @@
 import { validateRegisterForm } from '../../validators/registerValidator.js'
-import { registerUser } from '../../services/registrationService.js'
+import { registerUser } from '../../services/auth/registerUser.js'
 import { logger } from '../../config/winston.js'
 
 /**

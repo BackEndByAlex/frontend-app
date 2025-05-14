@@ -1,6 +1,6 @@
-import { loginWithForm, sendVerificationCodeAfterLogin } from '../../services/authService.js'
 import { logger } from '../../config/winston.js'
-
+import { loginWithForm } from '../../services/auth/loginWithForm.js'
+import { sendVerificationCodeAfterLogin } from '../../services/auth/sendVerificationCodeAfterLogin.js'
 /**
  * Handles form-based login by sending credentials to the auth-service,
  * verifying the token, saving user data in the session, and sending a verification code.

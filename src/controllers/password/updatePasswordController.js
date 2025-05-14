@@ -1,4 +1,4 @@
-import { changePasswordService } from '../../services/apiClient.js'
+import { changePasswordService } from '../../services/password/changePasswordService.js'
 
 /**
  * Updates the password for a specific entry.

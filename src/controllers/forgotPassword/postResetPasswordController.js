@@ -1,4 +1,4 @@
-import { postToAuthService } from '../../services/apiClient.js'
+import { postToAuthService } from '../../services/auth/postToAuthService.js'
 
 /**
  * Handles the reset password form submission.

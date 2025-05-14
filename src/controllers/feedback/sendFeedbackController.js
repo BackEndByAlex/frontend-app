@@ -1,4 +1,4 @@
-import { sendFeedback } from '../../services/apiClient.js'
+import { sendFeedback } from '../../services/auth/sendFeedback.js'
 
 /**
  * Sends feedback to the authentication service.

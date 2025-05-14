@@ -1,210 +1,210 @@
-import { logger } from '../config/winston.js'
+// import { logger } from '../config/winston.js'
 
-const AUTH_URL = process.env.AUTH_URL
-const PASSWORD_URL = process.env.PASSWORD_URL
+// const AUTH_URL = process.env.AUTH_URL
+// const PASSWORD_URL = process.env.PASSWORD_URL
 
-/**
- * Fetches the Firebase configuration from the backend API.
- *
- * @returns {Promise<object>} A promise that resolves to the Firebase configuration object.
- */
-export async function getFirebaseConfig () {
-  const response = await fetch('/api/v1/auth/firebase-config')
-  const data = await response.json()
-  return data.firebaseConfig
-}
+// /**
+//  * Fetches the Firebase configuration from the backend API.
+//  *
+//  * @returns {Promise<object>} A promise that resolves to the Firebase configuration object.
+//  */
+// export async function getFirebaseConfig () {
+//   const response = await fetch('/api/v1/auth/firebase-config')
+//   const data = await response.json()
+//   return data.firebaseConfig
+// }
 
-/**
- * Verifies a code using the authentication service.
- *
- * @param {string} email - The email address to verify.
- * @param {string} code - The verification code.
- * @param {string} token - The authorization token.
- * @returns {Promise<object>} A promise that resolves to the verification result.
- */
-export async function verifyCodeFromAuthService (email, code, token) {
-  try {
-    const res = await fetch(`${AUTH_URL}/verify-code`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ email, code })
-    })
+// /**
+//  * Verifies a code using the authentication service.
+//  *
+//  * @param {string} email - The email address to verify.
+//  * @param {string} code - The verification code.
+//  * @param {string} token - The authorization token.
+//  * @returns {Promise<object>} A promise that resolves to the verification result.
+//  */
+// export async function verifyCodeFromAuthService (email, code, token) {
+//   try {
+//     const res = await fetch(`${AUTH_URL}/verify-code`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Bearer ${token}`
+//       },
+//       body: JSON.stringify({ email, code })
+//     })
 
-    if (!res.ok) {
-      if (res.status === 404) {
-        // Specifikt fall: ogiltig kod
-        throw new Error('Ogiltig kod')
-      }
-      const errorText = await res.text()
-      throw new Error(`Fel vid verifiering: ${errorText}`)
-    }
+//     if (!res.ok) {
+//       if (res.status === 404) {
+//         // Specifikt fall: ogiltig kod
+//         throw new Error('Ogiltig kod')
+//       }
+//       const errorText = await res.text()
+//       throw new Error(`Fel vid verifiering: ${errorText}`)
+//     }
 
-    return await res.json()
-  } catch (error) {
-    logger.error('[VERIFY CODE API ERROR]', { error })
-    throw error
-  }
-}
+//     return await res.json()
+//   } catch (error) {
+//     logger.error('[VERIFY CODE API ERROR]', { error })
+//     throw error
+//   }
+// }
 
-/**
- * Sends a POST request to the auth-service.
- *
- * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'login' or 'register').
- * @param {object} body - The request body.
- * @returns {Promise<object>} - The response data.
- */
-export async function postToAuthService (endpoint, body) {
-  try {
-    const response = await fetch(`${AUTH_URL}/${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    })
+// /**
+//  * Sends a POST request to the auth-service.
+//  *
+//  * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'login' or 'register').
+//  * @param {object} body - The request body.
+//  * @returns {Promise<object>} - The response data.
+//  */
+// export async function postToAuthService (endpoint, body) {
+//   try {
+//     const response = await fetch(`${AUTH_URL}/${endpoint}`, {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify(body)
+//     })
 
-    const contentType = response.headers.get('content-type')
-    if (!contentType || !contentType.includes('application/json')) {
-      throw new Error('Svar från auth-service är inte JSON')
-    }
+//     const contentType = response.headers.get('content-type')
+//     if (!contentType || !contentType.includes('application/json')) {
+//       throw new Error('Svar från auth-service är inte JSON')
+//     }
 
-    const data = await response.json()
+//     const data = await response.json()
 
-    if (!response.ok) {
-      const errMsg = data.error || data.message || 'Något gick fel mot auth-service'
-      throw new Error(errMsg)
-    }
+//     if (!response.ok) {
+//       const errMsg = data.error || data.message || 'Något gick fel mot auth-service'
+//       throw new Error(errMsg)
+//     }
 
-    return data
-  } catch (error) {
-    logger.error(`[POST ${endpoint} SERVICE ERROR]`, { error })
-    throw error
-  }
-}
+//     return data
+//   } catch (error) {
+//     logger.error(`[POST ${endpoint} SERVICE ERROR]`, { error })
+//     throw error
+//   }
+// }
 
-/**
- * Sends a POST request to the password-service.
- *
- * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'reset-password').
- * @param {object} body - The request body.
- * @param {string} token - The authorization token.
- * @returns {Promise<object>} - The response data.
- */
-export async function postToPasswordService (endpoint, body, token) {
-  const response = await fetch(`${PASSWORD_URL}/${endpoint}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(body)
-  })
+// /**
+//  * Sends a POST request to the password-service.
+//  *
+//  * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'reset-password').
+//  * @param {object} body - The request body.
+//  * @param {string} token - The authorization token.
+//  * @returns {Promise<object>} - The response data.
+//  */
+// export async function postToPasswordService (endpoint, body, token) {
+//   const response = await fetch(`${PASSWORD_URL}/${endpoint}`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Authorization: `Bearer ${token}`
+//     },
+//     body: JSON.stringify(body)
+//   })
 
-  const data = await response.json()
+//   const data = await response.json()
 
-  if (!response.ok) {
-    throw new Error(data.message || 'Fel mot password-service')
-  }
+//   if (!response.ok) {
+//     throw new Error(data.message || 'Fel mot password-service')
+//   }
 
-  return data
-}
+//   return data
+// }
 
-/**
- * Sends a GET request to the password-service.
- *
- * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'user-info').
- * @param {string} token - The authorization token.
- * @returns {Promise<object>} - The response data.
- */
-export async function getFromPasswordService (endpoint, token) {
-  const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
-  })
+// /**
+//  * Sends a GET request to the password-service.
+//  *
+//  * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'user-info').
+//  * @param {string} token - The authorization token.
+//  * @returns {Promise<object>} - The response data.
+//  */
+// export async function getFromPasswordService (endpoint, token) {
+//   const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Authorization: `Bearer ${token}`
+//     }
+//   })
 
-  const data = await res.json()
+//   const data = await res.json()
 
-  if (!res.ok) {
-    throw new Error(data.message || 'Fel vid hämtning från password-service')
-  }
+//   if (!res.ok) {
+//     throw new Error(data.message || 'Fel vid hämtning från password-service')
+//   }
 
-  return data
-}
+//   return data
+// }
 
-/**
- * Sends a PUT request to the password-service.
- *
- * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'change-password').
- * @param {object} body - The request body.
- * @param {string} token - The authorization token.
- * @returns {Promise<object>} - The response data.
- */
-export async function changePasswordService (endpoint, body, token) {
-  const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(body)
-  })
+// /**
+//  * Sends a PUT request to the password-service.
+//  *
+//  * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'change-password').
+//  * @param {object} body - The request body.
+//  * @param {string} token - The authorization token.
+//  * @returns {Promise<object>} - The response data.
+//  */
+// export async function changePasswordService (endpoint, body, token) {
+//   const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
+//     method: 'PUT',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Authorization: `Bearer ${token}`
+//     },
+//     body: JSON.stringify(body)
+//   })
 
-  const data = await res.json()
+//   const data = await res.json()
 
-  if (!res.ok) {
-    throw new Error(data.message || 'Fel vid PUT mot password-service')
-  }
+//   if (!res.ok) {
+//     throw new Error(data.message || 'Fel vid PUT mot password-service')
+//   }
 
-  return data
-}
+//   return data
+// }
 
-/**
- * Sends feedback to the auth-service.
- *
- * @param {string} message - The feedback message to send.
- * @returns {Promise<void>} - Resolves when the feedback is successfully sent.
- */
-export async function sendFeedback (message) {
-  const response = await fetch(`${AUTH_URL}/feedback`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message })
-  })
+// /**
+//  * Sends feedback to the auth-service.
+//  *
+//  * @param {string} message - The feedback message to send.
+//  * @returns {Promise<void>} - Resolves when the feedback is successfully sent.
+//  */
+// export async function sendFeedback (message) {
+//   const response = await fetch(`${AUTH_URL}/feedback`, {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify({ message })
+//   })
 
-  if (!response.ok) throw new Error('Misslyckades att skicka feedback')
-}
+//   if (!response.ok) throw new Error('Misslyckades att skicka feedback')
+// }
 
-/**
- * Fetches all feedback from the auth-service.
- *
- * @returns {Promise<object[]>} - A promise that resolves to an array of feedback objects.
- */
-export async function fetchAllFeedback () {
-  const response = await fetch(`${AUTH_URL}/feedback-get-all`)
-  if (!response.ok) throw new Error('Kunde inte hämta feedback')
-  return await response.json()
-}
+// /**
+//  * Fetches all feedback from the auth-service.
+//  *
+//  * @returns {Promise<object[]>} - A promise that resolves to an array of feedback objects.
+//  */
+// export async function fetchAllFeedback () {
+//   const response = await fetch(`${AUTH_URL}/feedback-get-all`)
+//   if (!response.ok) throw new Error('Kunde inte hämta feedback')
+//   return await response.json()
+// }
 
-/**
- * Sends a DELETE request to the password-service.
- *
- * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'delete-user').
- * @param {string} token - The authorization token.
- * @returns {Promise<object>} - The response data.
- */
-export async function deletePasswordService (endpoint, token) {
-  const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
-  })
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.message || 'Fel vid borttagning från password-service')
-  return data
-}
+// /**
+//  * Sends a DELETE request to the password-service.
+//  *
+//  * @param {string} endpoint - The endpoint after /api/v1/ (e.g., 'delete-user').
+//  * @param {string} token - The authorization token.
+//  * @returns {Promise<object>} - The response data.
+//  */
+// export async function deletePasswordService (endpoint, token) {
+//   const res = await fetch(`${PASSWORD_URL}/${endpoint}`, {
+//     method: 'DELETE',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Authorization: `Bearer ${token}`
+//     }
+//   })
+//   const data = await res.json()
+//   if (!res.ok) throw new Error(data.message || 'Fel vid borttagning från password-service')
+//   return data
+// }

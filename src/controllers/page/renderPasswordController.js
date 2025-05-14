@@ -1,4 +1,4 @@
-import { getFromPasswordService } from '../../services/apiClient.js'
+import { getFromPasswordService } from '../../services/password/getFromPasswordService.js'
 
 /**
  * Renders the password page with saved passwords.

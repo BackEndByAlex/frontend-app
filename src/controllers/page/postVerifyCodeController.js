@@ -1,4 +1,4 @@
-import { verifyCodeFromAuthService } from '../../services/apiClient.js'
+import { verifyCodeFromAuthService } from '../../services/auth/verifyCodeFromAuthService.js'
 import { logger } from '../../config/winston.js'
 
 /**

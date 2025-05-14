@@ -1,10 +1,20 @@
+import { getFeedbackAuth } from '../../services/auth/getFeedbackFromAuth.js'
+import { logger } from '../../config/winston.js'
+
 /**
- * Retrieves all feedback from the authentication service.
+ * Handles the request to get feedback from the authentication service.
  *
- * @returns {Promise<object>} - A promise that resolves to the feedback data.
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ * @returns {Promise<void>} Sends a JSON response with feedback or an error message.
  */
-export const getFeedbackFromAuth = async () => {
-  const res = await fetch('http://auth:4000/api/v1/feedback-get-all')
-  const data = await res.json()
-  return data
+export const getFeedbackFromAuth = async (req, res) => {
+  try {
+    const data = await getFeedbackAuth()
+
+    return data
+  } catch (err) {
+    logger.error('[GET FEEDBACK ERROR]', err)
+    res.status(500).json({ error: 'Kunde inte hämta feedback' })
+  }
 }

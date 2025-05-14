@@ -1,4 +1,4 @@
-import { postToPasswordService } from '../../services/apiClient.js'
+import { postToPasswordService } from '../../services/password/postToPasswordService.js'
 import { logger } from '../../config/winston.js'
 
 /**
