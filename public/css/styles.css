@@ -60,6 +60,9 @@ body.sidebar-visible .feedback-display {
 }
 
 @media screen and (max-width: 900px) {
+  body {
+    margin-top: 20px;
+  }
 
   .password-detail-card {
   margin-left: 0px;

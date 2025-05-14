@@ -21,7 +21,7 @@ export const handleGoogleLoginProxy = async (req, res) => {
 
     req.session.isCodeVerified = false
     await sendVerificationCode(idToken)
-    req.flash('success', 'Google-inloggning lyckades!')
+    req.flash('success', 'Inloggning lyckades! En verifieringskod har skickats till din e-post.')
     res.status(200).json({ message: 'Session created' })
   } catch (err) {
     logger.error('[GOOGLE LOGIN ERROR]', { error: err })

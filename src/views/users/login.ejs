@@ -9,10 +9,10 @@
     <form action="./auth/login" method="POST" class="auth-form">
       <input type="hidden" name="_csrf" id="csrfToken" value="<%= csrfToken %>">
       <label for="email">E-post</label>
-      <input type="email" name="email" id="email" required placeholder="you@example.com" />
+      <input type="email" name="email" id="email" required placeholder="you@example.com" autocomplete="username" />
 
       <label for="password">Lösenord</label>
-      <input type="password" name="password" id="password" required placeholder="••••••••" />
+      <input type="password" name="password" id="password" required placeholder="••••••••" autocomplete="current-password" />
 
       <button type="submit" class="btn-primary">Logga in</button>
 
