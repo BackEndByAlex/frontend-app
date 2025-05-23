@@ -1,0 +1,70 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  PRODUCTION_HOST: cscloud7-142.lnu.se
+  DEPLOY_USER: ubuntu
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Compile the code
+        run: |
+          echo "Compiling the code..."
+          sleep 2
+          echo "Compile complete."
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Lint code
+        run: npm run lint
+
+  deploy:
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ env.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy sensitive files
+        run: |
+          echo "${{ secrets.DOTENV_FILE }}" > .env
+          echo "${{ secrets.PUBLIC_PEM }}" > public.pem
+
+      - name: Deploy via Docker Compose
+        run: |
+          ssh ${{ env.DEPLOY_USER }}@${{ env.PRODUCTION_HOST }} \
+          'cd /var/www/timelock/frontend-app && docker-compose -f docker-compose.yaml up --build -d'
