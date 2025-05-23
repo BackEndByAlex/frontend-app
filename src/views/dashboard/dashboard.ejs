@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="./css/dashboard.css">
+<script type="module" src="./js/checkSession.js"></script>
+
+<button class="menu-toggle" aria-label="Öppna meny">☰</button>
+<%- include('./sidebar') %>
+<%- include('../partials/flashmeddelande') %>
+
+<main class="dashboard-content">
+  <h1>Välkommen, <%= user?.name %> 👋</h1>
+
+  <% if (!isCodeVerified) { %>
+    <%- include('./verifiering') %>
+  <% } else { %>
+    <%- include('./generator') %>
+    <%- include('./sparade') %>
+    <%- include('./inställningar') %>
+  <% } %>
+</main>

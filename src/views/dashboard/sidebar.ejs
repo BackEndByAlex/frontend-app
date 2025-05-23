@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="./css/sidebar.css">
+
+<script type="module" src="./js/sidebar.js"></script>
+<script type="module" src="./js/sidebarToggle.js"></script>
+<script type="module" src="./js/logout.js"></script>
+
+<aside class="sidebar">
+  <h2><a href="./">📘 TimeLock</a></h2>
+  <nav class="sidebar-nav">
+    <% if (pageType === 'dashboard') { %>
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="generator">
+        🔐 Generera lösenord
+      </button>
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="sparade">
+        📂 Sparade lösenord
+      </button>
+      <button class="sidebar-btn" data-target="inställningar">
+        ⚙️ Inställningar
+      </button>
+
+    <% } else if (pageType === 'passwordDetail') { %>
+      <a href="./dashboard" class="sidebar-btn">
+        ← Tillbaka
+      </a>
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="showpassword">
+        ✏️ Vissa lösenord
+      </button>
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="change">
+        ✏️ Ändra
+      </button>
+      <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="history">
+        📂 Historik
+      </button>
+        <button class="sidebar-btn <%= !isCodeVerified ? 'disabled' : '' %>" data-target="delete">
+          🗑️ Ta bort
+        </button>
+      </form>
+    <% } %>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="avatar">👤</div>
+      <div class="user-details">
+        <span class="user-name"><%= user?.name %></span>
+        <% if (isCodeVerified) { %>
+          <span class="verified-status">✔ Verifierad</span>
+        <% } else { %>
+          <span class="unverified-status">⛔ Ej verifierad</span>
+        <% } %>
+        <form id="logout-form" method="POST" action="./logout">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="btn-logout">Logga ut</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</aside>

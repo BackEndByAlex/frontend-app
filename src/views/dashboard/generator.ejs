@@ -1,0 +1,37 @@
+<script type="module" src="./js/password.js"></script>
+<link rel="stylesheet" href="./css/generator.css">
+
+<section id="generator" class="dashboard-section active">
+  <div class="dashboard-card">
+    <h2>Generera ett säkert lösenord</h2>
+    <div class="password-generator">
+      <div class="password-input-wrapper">
+        <input type="text" id="generated-password" readonly placeholder="Här kommer ditt lösenord...">
+        <div class="password-icons">
+          <button type="button" id="toggle-password-visibility" class="icon-btn">
+            <!-- Öga SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 5c-7.633 0-11 7-11 7s3.367 7 11 7 11-7 11-7-3.367-7-11-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"/>
+            </svg>
+          </button>
+          <button type="button" id="copy-password" class="icon-btn">
+            <!-- Kopiera SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 21H9c-1.1 0-2-.9-2-2v-10h2v10h10v2zM15 17H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zm0-12H5v10h10V5z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <form id="save-password-form" action="./save-password" method="POST" class="save-password-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="text" name="service" placeholder="Tjänstens namn" required>
+        <input type="text" name="username" placeholder="Användarnamn för tjänsten" required>
+        <input type="text" id="password-field" name="password" placeholder="Här kommer ditt lösenord..." required>
+        <div class="password-buttons">
+          <button type="button" id="generate-password" class="btn-primary">Generera lösenord</button>
+          <button type="submit" class="btn-success">Spara lösenord</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+{
+  "name": "TimeLock",
+  "short_name": "TL",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#1f2937",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src":   "/icons/icon192.png",
+      "sizes": "192x192",
+      "type":  "image/png"
+    },
+    {
+      "src":   "/icons/icon512.png",
+      "sizes": "512x512",
+      "type":  "image/png"
+    }
+  ]
+}
