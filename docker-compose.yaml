@@ -1,7 +1,7 @@
 services:
   frontend:
     # GitHub Container Registry image
-    image: ghcr.io/${GITHUB_REPOSITORY}:main
+    image: timelock-frontend:latest
     build:
       context: .
       dockerfile: Dockerfile
