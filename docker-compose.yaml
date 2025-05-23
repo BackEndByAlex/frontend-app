@@ -1,6 +1,7 @@
 services:
   frontend:
-    image: registry.gitlab.com/organisation/frontend-app:${CI_COMMIT_REF_SLUG}
+    # GitHub Container Registry image
+    image: ghcr.io/${GITHUB_REPOSITORY}:main
     build:
       context: .
       dockerfile: Dockerfile

@@ -1,70 +1,113 @@
-name: CI/CD Pipeline
+name: Build and Deploy
 
 on:
   push:
-    branches: ["main"]
-
-env:
-  PRODUCTION_HOST: cscloud7-142.lnu.se
-  DEPLOY_USER: ubuntu
+    branches: [ main ]
 
 jobs:
+  # ─────────────────────────────────────────────────────────────
+  # 1) Kompilera koden
+  # ─────────────────────────────────────────────────────────────
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+      
       - name: Compile the code
         run: |
           echo "Compiling the code..."
           sleep 2
           echo "Compile complete."
 
-  test:
+  # ─────────────────────────────────────────────────────────────
+  # 2) Unit-tester
+  # ─────────────────────────────────────────────────────────────
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-
+          node-version: '18'
+          cache: 'npm'
+      
       - name: Install dependencies
         run: npm ci
-
+      
       - name: Run unit tests
         run: npm run test:unit
 
-      - name: Lint code
-        run: npm run lint
-
-  deploy:
-    needs: [test]
+  # ─────────────────────────────────────────────────────────────
+  # 3) Lint
+  # ─────────────────────────────────────────────────────────────
+  lint-test:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.9.0
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linting
+        run: npm run lint
 
-      - name: Add server to known_hosts
+  # ─────────────────────────────────────────────────────────────
+  # 4) Deploy till produktion via Docker-over-SSH
+  # ─────────────────────────────────────────────────────────────
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [unit-test, lint-test]
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: ${{ secrets.PRODUCTION_URL }}
+    env:
+      PRODUCTION_HOST: ${{ secrets.PRODUCTION_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DOCKER_HOST: ssh://${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup SSH
         run: |
+          # Se till att ssh-agent finns
+          command -v ssh-agent >/dev/null || ( sudo apt-get update -y && sudo apt-get install -y openssh-client )
+          
+          # Starta ssh-agent
+          eval $(ssh-agent -s)
+          
+          # Lägg till privat SSH-nyckel från GitHub secret
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key
+          chmod 600 deploy_key
+          ssh-add deploy_key
+          
+          # Skapa ~/.ssh och sätt behörigheter
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ env.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Copy sensitive files
+          chmod 700 ~/.ssh
+          
+          # Lägg till värdservern i known_hosts
+          ssh-keyscan -H "${{ secrets.PRODUCTION_HOST }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+      
+      - name: Create config files
         run: |
+          mkdir -p config
           echo "${{ secrets.DOTENV_FILE }}" > .env
           echo "${{ secrets.PUBLIC_PEM }}" > public.pem
-
-      - name: Deploy via Docker Compose
+      
+      - name: Deploy to production
         run: |
-          ssh ${{ env.DEPLOY_USER }}@${{ env.PRODUCTION_HOST }} \
-          'cd /var/www/timelock/frontend-app && docker-compose -f docker-compose.yaml up --build -d'
+          echo "Deploying to production..."
+          docker compose -f docker-compose.yaml up --build -d

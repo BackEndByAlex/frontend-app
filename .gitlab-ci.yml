@@ -1,0 +1,91 @@
+# # ─────────────────────────────────────────────────────────────
+# # SSH-setup-anchor (används bara i deploy-steget) DOne?
+# # ─────────────────────────────────────────────────────────────
+# .before_script_ssh_setup: &before_script_ssh_setup
+#   # Se till att ssh-agent finns
+#   - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install -y openssh-client -y )
+#   # Starta ssh-agent
+#   - eval $(ssh-agent -s)
+#   # Lägg till privat SSH-nyckel från CI-variabeln
+#   - chmod 600 "$SSH_PRIVATE_KEY"
+#   - ssh-add "$SSH_PRIVATE_KEY"
+#   # Skapa ~/.ssh och sätt behörigheter
+#   - mkdir -p ~/.ssh
+#   - chmod 700 ~/.ssh
+#   # Lägg till värdservern i known_hosts
+#   - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
+#   - chmod 644 ~/.ssh/known_hosts
+
+
+# # ─────────────────────────────────────────────────────────────
+# # Basimage med Docker CLI
+# # ─────────────────────────────────────────────────────────────
+# image: docker:27-cli
+
+# # ─────────────────────────────────────────────────────────────
+# # Definiera pipelinens steg
+# # ─────────────────────────────────────────────────────────────
+# stages:
+#   - build
+#   - test
+#   - deploy
+
+# # ─────────────────────────────────────────────────────────────
+# # 1) Kompilera koden
+# # ─────────────────────────────────────────────────────────────
+# build-job:
+#   stage: build
+#   script:
+#     - echo "Compiling the code..."
+#     - sleep 2   # Simulerar byggtid
+#     - echo "Compile complete."
+
+# # ─────────────────────────────────────────────────────────────
+# # 2) Unit-tester
+# # ─────────────────────────────────────────────────────────────
+# unit-test-job:
+#   stage: test
+#   image: node:18-alpine
+#   script:
+#     - npm ci
+#     - npm run test:unit   # se till att "test:unit" kör Vitest
+
+# # ─────────────────────────────────────────────────────────────
+# # 3) Lint
+# # ─────────────────────────────────────────────────────────────
+# lint-test-job:
+#   stage: test
+#   image: node:18-alpine
+#   script:
+#     - npm ci
+#     - npm run lint
+#   allow_failure: false
+
+# # ─────────────────────────────────────────────────────────────
+# # 4) Deploy till produktion via Docker-over-SSH
+# # ─────────────────────────────────────────────────────────────
+# deploy_production_job:
+#   stage: deploy
+#   environment:
+#     name: production
+#     url: http://$PRODUCTION_HOST
+#   variables:
+#     # Värdnamn/ip för servern, sätt denna i CI/CD-inställningarna
+#     PRODUCTION_HOST: cscloud7-142.lnu.se
+#     # SSH-användare på servern
+#     DEPLOY_USER:     ubuntu
+#     # Docker-host för över SSH
+#     DOCKER_HOST:     ssh://$DEPLOY_USER@$PRODUCTION_HOST
+#   before_script:
+#     - *before_script_ssh_setup
+#     - mkdir -p config
+#     - cp "$DOTENV_FILE" .env
+#     - cp "$PUBLIC_PEM"  public.pem
+#   script:
+#     - echo "Deploying to production..."
+#     - docker compose -f docker-compose.yaml up --build -d
+#   only:
+#     - main
+#   needs:
+#     - unit-test-job
+#     - lint-test-job
