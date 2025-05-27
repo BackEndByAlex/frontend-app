@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="./css/login.css">
+<script type="module" src="./js/google.js"></script>
+
+<section class="auth-section">
+  <%- include('../partials/flashmeddelande') %>
+  <div class="auth-container">
+    <h1 class="auth-title">Logga in till TimeLock</h1>
+
+    <form action="./auth/login" method="POST" class="auth-form">
+      <input type="hidden" name="_csrf" id="csrfToken" value="<%= csrfToken %>">
+      <label for="email">E-post</label>
+      <input type="email" name="email" id="email" required placeholder="you@example.com" autocomplete="username" />
+
+      <label for="password">Lösenord</label>
+      <input type="password" name="password" id="password" required placeholder="••••••••" autocomplete="current-password" />
+
+      <button type="submit" class="btn-primary">Logga in</button>
+
+      <p class="forgot-password">
+        <a href="./forgot-password">Glömt Lösenord?</a>
+      </p>
+    </form>
+
+    <div class="divider">
+      <span>eller</span>
+    </div>
+
+    <button id="google-login" class="btn-google"> Logga in med Google </button>
+
+    <p class="auth-footer">Har du inget konto? <a href="./register">Registrera dig här</a></p>
+    <p class="consent-text">
+    By signing up, you agree to our
+    <a href="./terms" target="_blank">Terms of Service</a>
+    and
+    <a href="./privacy" target="_blank">Privacy Policy</a>.
+    </p>
+  </div>
+</section>

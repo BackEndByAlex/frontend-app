@@ -1,0 +1,20 @@
+services:
+  frontend:
+    image: ghcr.io/backendbyalex/frontend-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./public.pem:/app/public.pem:ro
+    restart: unless-stopped
+    networks:
+      - timelock-network
+
+networks:
+  timelock-network:
+    external: true

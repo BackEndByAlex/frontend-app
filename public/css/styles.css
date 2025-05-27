@@ -1,0 +1,114 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Globala knappar */
+.btn-primary {
+  display: inline-block;
+  background-color: #003865;
+  color: white;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #012f5f;
+}
+
+.dashboard-section#history {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
+body.sidebar-visible .feedback-display {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
+.password-detail-card {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
+.auth-section {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
+.info-card {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
+.hero {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
+.site-footer {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
+.page-wrapper {
+  margin-left: 240px;
+  transition: margin 0.3s ease;
+}
+
+@media screen and (max-width: 900px) {
+  .password-detail-card {
+  margin-left: 0px;
+  transition: margin 0.3s ease;
+  }
+
+  body.sidebar-visible .feedback-display {
+    margin-left: 0;
+    transition: margin 0.3s ease;
+  }
+  .auth-section {
+    margin-left: 0;
+    transition: margin 0.3s ease;
+  }
+
+  .dashboard-section#history {
+  margin-left: 0px;
+  transition: margin 0.3s ease;
+  }
+
+  .info-card {
+  margin-left: 0px;
+  transition: margin 0.3s ease;
+  }
+
+  .hero {
+  margin-left: 0px;
+  transition: margin 0.3s ease;
+  }
+  .site-footer {
+  margin-left: 0px;
+  transition: margin 0.3s ease;
+  }
+  .page-wrapper {
+  margin-left: 0px;
+  transition: margin 0.3s ease;
+  }
+}

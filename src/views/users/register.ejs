@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="./css/register.css">
+<script type="module" src="./js/google.js"></script>
+
+<main class="register-page">
+  <%- include('../partials/flashmeddelande') %>
+  <h1>Register</h1>
+
+  <form id="register-form" action="./register" method="POST">
+    <input type="hidden" id="csrfToken" name="_csrf" value="<%= csrfToken %>">
+    <div>
+      <input type="text" id="firstName" name="firstName" placeholder="First Name" required />
+      <input type="text" id="lastName" name="lastName" placeholder="Last Name" required />
+      <input type="email" id="email" name="email" placeholder="Email" required />
+      <input type="email" id="confirmEmail" name="confirmEmail" placeholder="Confirm Email" required autocomplete="username"/>
+      <input type="password" id="password" name="password" placeholder="Password" required autocomplete="new-password"/>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required autocomplete="new-password"/>
+      <button type="submit">Register</button>
+    </div>
+  </form>
+
+  <p>Or sign up with Google:</p>
+  <button id="google-login">Continue with Google</button>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <p style="color: #f87171;"><%= error %></p>
+  <% } %>
+  <p>Already have an account? <a href="./login">Login</a></p>
+  <p class="consent-text">
+    By signing up, you agree to our
+    <a href="./terms" target="_blank">Terms of Service</a>
+    and
+    <a href="./privacy" target="_blank">Privacy Policy</a>.
+  </p>
+</main>
