@@ -1,37 +1,136 @@
-<link rel="stylesheet" href="./css/home.css"/>
-<main class="hero">
-  <%- include('../partials/flashmeddelande') %>
-  <div class="hero-content">
-    <h1><span>Protect</span> your passwords</h1>
-    <p>Securely store and manage all your passwords in one place</p>
-    <% if (typeof user !== 'undefined' && user) { %>
-      <a href="./dashboard" class="btn-primary">Gå till Dashboard</a>
-    <% } else { %>
-      <a href="./login" class="btn-primary">Get Started</a>
-    <% } %>
+<link rel="stylesheet" href="./css/index.css"/>
+<%- include('../partials/flashmeddelande') %>
 
-    <!-- Feedback-formulär -->
-    <div class="feedback-section">
-      <h3>Leave anonymous feedback 💬</h3>
-      <form id="feedback-form" action="./feedback/send" method="POST">
-        <input type="hidden" name="_csrf" id="csrfToken" value="<%= csrfToken %>">
-        <input type="text" name="message" id="feedback-message" placeholder="Type your message..." required>
-        <button type="submit">Send</button>
-      </form>
-    </div>
+<main class="hero">
+  <div class="hero-content">
+    <h1>Securely Store & Manage All Your Passwords in One Place</h1>
+  </div>
+  
+  <div class="hero-button">
+    <% if (typeof user !== 'undefined' && user) { %>
+      <a href="./dashboard" class="btn-get-started">Go to Dashboard</a>
+    <% } else { %>
+      <a href="./login" class="btn-get-started">Get Started</a>
+    <% } %>
   </div>
 </main>
 
-<section class="feedback-display">
-  <h3 class="feedback-heading">🗨️ Recent Feedback</h3>
-  <ul id="feedback-list">
-    <% if (feedbacks && feedbacks.length > 0) { %>
-      <% feedbacks.forEach(fb => { %>
-        <li class="fade-in"><%= fb.message %></li>
-      <% }) %>
-    <% } else { %>
-      <li>Inget feedback ännu.</li>
-    <% } %>
-  </ul>
+<!-- One Secure Vault Section -->
+<section class="vault-section">
+  <div class="container">
+    <h2>One Secure <span class="vault-highlight">Vault</span></h2>
+    <p>Store every login credential in one encrypted vault. Auto-fill forms in your browser and mobile apps, generate strong passwords on the fly, and sync securely across all your devices.</p>
+  </div>
 </section>
 
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>Backup</h3>
+        <p>Keep your <span class="highlight">passwords</span> safely backed up at all times—so you will never lose access, even if you switch devices or delete an entry by mistake.</p>
+      </div>
+      
+      <div class="feature-card">
+        <h3>Easy <span class="highlight">Sharing</span></h3>
+        <p>Share a single password with family or teammates without exposing your entire collection—simple, secure, and under your control.</p>
+      </div>
+      
+      <div class="feature-card">
+        <h3>Always in <span class="highlight">Sync</span></h3>
+        <p>Modify a password in one spot, and it is <span class="highlight">updated</span> across all your devices—effortlessly and in real time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+  <div class="testimonials-container">
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <p>"If someone steals your password, you can change it. But if someone steals your thumbprint, you can't get a new thumb. The failure modes are very different."</p>
+        <span class="author">— Bruce Schneier</span>
+      </div>
+      
+      <div class="testimonial">
+        <p>"The only truly secure system is one that is powered off, cast in a block of concrete and sealed in a lead-lined room with armed guards."</p>
+        <span class="author">— Gene Spafford</span>
+      </div>
+      
+      <div class="testimonial">
+        <p>"As the Zuckerberg case suggests, it's a bad idea to use the same password for multiple accounts, as that can give a hacker access to your whole digital life."</p>
+        <span class="author">— Mark Zuckerberg</span>
+      </div>
+      
+      <div class="testimonial">
+        <p>"Amateurs hack systems, professionals hack people."</p>
+        <span class="author">— Bruce Schneier</span>
+      </div>
+      
+      <!-- Duplicate for seamless loop -->
+      <div class="testimonial">
+        <p>"If someone steals your password, you can change it. But if someone steals your thumbprint, you can't get a new thumb. The failure modes are very different."</p>
+        <span class="author">— Bruce Schneier</span>
+      </div>
+      
+      <div class="testimonial">
+        <p>"The only truly secure system is one that is powered off, cast in a block of concrete and sealed in a lead-lined room with armed guards."</p>
+        <span class="author">— Gene Spafford</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- One Secure Vault Section -->
+<section class="vault-section">
+  <div class="container">
+    <h2>One <span class="vault-highlight">Benefits</span></h2>
+    <p>TimeLock Password Manager gives you everything you need to keep your credentials safe, accessible and under control.</p>
+  </div>
+</section>
+
+<!-- Benefits Features Section -->
+<section class="benefits-features-section">
+  <div class="container">
+    <div class="benefits-features-grid">
+      <div class="benefits-feature-card">
+        <h3>Password <span class="highlight">History</span></h3>
+        <p>See every <span class="highlight">change</span> you've made—timestamps, old values and who/what device made them.</p>
+      </div>
+      
+      <div class="benefits-feature-card">
+        <h3><span class="highlight">Manage</span> Passwords</h3>
+        <p>Store, edit and delete all your <span class="highlight">credentials</span> in one secure vault. Organize entries with tags or folders for fast lookup.</p>
+      </div>
+      
+      <div class="benefits-feature-card">
+        <h3>Web & Mobile <span class="highlight">Access</span></h3>
+        <p>Open your <span class="highlight">vault</span> in any web browser or our native iOS/ Android apps. Auto-fill logins with one tap or click, wherever you are.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+  <div class="container">
+    <div class="contact-content">
+      <div class="contact-left">
+        <span class="heard-enough">HEARD<br>ENOUGH?</span>
+      </div>
+      
+      <div class="contact-center">
+        <h2>Contact us</h2>
+        <div class="contact-underline"></div>
+      </div>
+      
+      <div class="contact-right">
+        <button class="contact-arrow-btn">
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

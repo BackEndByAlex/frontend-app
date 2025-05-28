@@ -1,68 +1,169 @@
-/* footer.css */
+/* Import ManRope font */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+/* Footer with gradient background */
 .site-footer {
-  background-color: #0f172a;
-  color: #f1f5f9;
-  padding: 2rem 1rem;
-  font-size: 0.9rem;
+  background: linear-gradient(135deg, #130548 14%, #100536 62%, #200C81 100%);
+  color: #ffffff;
+  padding: 4rem 0 2rem 0;
+  font-family: 'Manrope', sans-serif;
 }
-.site-footer .container {
+
+.footer-container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 2rem;
 }
+
 .footer-content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 3rem;
 }
-.footer-text {
+
+/* TimeLock Section */
+.timelock-section h3 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.timelock-section p {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+/* Footer Sections */
+.footer-section h4 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.footer-links,
+.footer-info {
+  list-style: none;
+  padding: 0;
   margin: 0;
 }
-.social-links {
+
+.footer-links li,
+.footer-info li {
+  margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+  font-family: 'Manrope', sans-serif;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.footer-info li {
+  font-family: 'Manrope', sans-serif;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.copyright {
+  font-family: 'Manrope', sans-serif;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Social Icons */
+.social-icons {
   display: flex;
   gap: 1rem;
 }
-.social-link {
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
   display: flex;
   align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
-  color: inherit;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
-.social-link i {
+
+.social-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.social-icon i {
   font-size: 1.2rem;
-  margin-right: 0.5rem;
-}
-/* Hover-effekt */
-.social-link:hover {
-  color: #facc15;
 }
 
-.consent-text {
-  text-align: center;
-  font-size: 0.875rem;
-  color: #94a3b8; 
-  margin-top: 1rem;
-  line-height: 1.4;
-}
-
-.consent-text a {
-  color: #3b82f6; 
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.consent-text a:hover {
-  color: #60a5fa; 
-}
-
-
-/* Mobile-anpassning */
-@media (max-width: 600px) {
+/* Responsive Design */
+@media (max-width: 1024px) {
   .footer-content {
-    flex-direction: column;
-    text-align: center;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  
+  .timelock-section {
+    grid-column: 1 / -1;
+    justify-self: center;
   }
 }
 
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+  
+  .footer-container {
+    padding: 0 1rem;
+  }
+  
+  .site-footer {
+    padding: 3rem 0 2rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .timelock-section h3 {
+    font-size: 1.6rem;
+  }
+  
+  .footer-section h4 {
+    font-size: 1.1rem;
+  }
+}

@@ -1,44 +1,45 @@
 <% if (!locals.hideHeader) { %>
-  <link rel="stylesheet" href="./css/sidebar.css">
+  <link rel="stylesheet" href="./css/header.css">
   <script type="module" src="./js/logout.js"></script>
-  <script type="module" src="./js/sidebarToggle.js"></script>
   
-  <!-- Mobilmenyknapp -->
-  <button class="menu-toggle" aria-label="Öppna meny">☰</button>
-  
-  <!-- SIDEBAR SOM HEADER -->
-  <aside class="sidebar">
-    <div class="sidebar-container">
-      <!-- Logotyp -->
-      <a href="./"><h2>🔐 TimeLock</h2></a>
-  
-      <!-- Navigering -->
-      <nav class="sidebar-nav">
-        <% if (typeof user !== 'undefined' && user) { %>
-          <a class="sidebar-btn" href="./dashboard">📂 Dashboard</a>
-          <a class="sidebar-btn" href="./setting">⚙️ Inställningar</a>
-        <% } else { %>
-          <a class="sidebar-btn" href="./register">📝 Registrera</a>
-          <a class="sidebar-btn" href="./login">🔑 Logga in</a>
-        <% } %>
-      </nav>
-    </div>
-  
-    <!-- Användarinformation (längst ner) -->
-    <% if (typeof user !== 'undefined' && user) { %>
-      <div class="sidebar-footer">
-        <div class="user-info">
-          <div class="avatar">👤</div>
-          <div class="user-details">
-            <span class="user-name"><%= user.name %></span>     
-            <form id="logout-form" method="POST" action="./logout">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-              <button type="submit" class="btn-logout">Logga ut</button>
-            </form>
-          </div>
-        </div>
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="header-container">
+      <!-- Logo med SVG -->
+      <div class="logo">
+        <a href="./">
+          <img src="./img/crypto_key_logo.svg" alt="TimeLock Logo" class="logo-icon">
+          <span class="logo-text">TimeLock</span>
+        </a>
       </div>
-    <% } %>
-  </aside>
-  <% } %>
-  
+      
+      <!-- Main Navigation -->
+      <nav class="main-nav">
+        <a href="./" class="nav-link">Home</a>
+        <a href="./dashboard" class="nav-link">Options</a>
+        <a href="#" class="nav-link">FAQ</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+      
+      <!-- Auth Buttons -->
+      <div class="auth-buttons">
+        <% if (typeof user !== 'undefined' && user) { %>
+          <form id="logout-form" method="POST" action="./logout" style="display: inline;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn-logout">Logout</button>
+          </form>
+        <% } else { %>
+          <a href="./login" class="btn-signin">Sign in</a>
+          <a href="./register" class="btn-register">Register</a>
+        <% } %>
+      </div>
+      
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+<% } %>

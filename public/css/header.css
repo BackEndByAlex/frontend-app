@@ -1,0 +1,194 @@
+/* Import ManRope font */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+/* Top Header Navigation */
+.top-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 3rem;
+}
+
+/* Logo */
+.logo a {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1.5rem;
+  transition: opacity 0.3s ease;
+}
+
+.logo a:hover {
+  opacity: 0.9;
+}
+
+.logo-icon {
+  width: 60px;
+  height: 60px;
+}
+
+.logo-text {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: white;
+}
+
+/* Main Navigation */
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.nav-link.active {
+  color: white;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background: white;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Auth Buttons */
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-signin {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-family: 'Consolas', 'Courier Prime', 'Courier New', monospace;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.btn-signin::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0.3rem;
+  left: 50%;
+  background-color: white;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.btn-signin:hover {
+  color: white;
+}
+
+.btn-signin:hover::after {
+  width: 30%;
+}
+
+.btn-register, .btn-logout {
+  background: rgba(255, 255, 255);
+  backdrop-filter: blur(10px);
+  color: #611FA2;
+  text-decoration: none;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  gap: 4px;
+}
+
+.mobile-menu-toggle span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .header-container {
+    padding: 1rem 2rem;
+  }
+  
+  .main-nav {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-nav,
+  .auth-buttons {
+    display: none;
+  }
+  
+  .mobile-menu-toggle {
+    display: flex;
+  }
+  
+  .header-container {
+    padding: 1rem 1.5rem;
+  }
+}
+
+/* Body adjustment for fixed header */
+body {
+  margin: 0;
+  padding: 0;
+}

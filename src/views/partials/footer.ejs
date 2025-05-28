@@ -1,23 +1,48 @@
 <link rel="stylesheet" href="./css/footer.css">
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  integrity="sha512-pY1LY..."
-  crossorigin= "anonymous"
-  referrerpolicy="no-referrer"
-/>
 
-
-<% if (!locals.hideHeader) { %>
+<% if (!locals.hideFooter) { %>
   <footer class="site-footer">
-    <div class="container">
+    <div class="footer-container">
       <div class="footer-content">
-        <p class="footer-text">
-          © 2025 Alexandru C.A — Licensierad under CC BY 4.0
-        </p>
-        <div class="social-links">
-          <a href="https://www.linkedin.com/in/alexandru-ca/" target="_blank" rel="noopener" class="social-link">
-            <i class="fab fa-linkedin"></i><span>LinkedIn</span>
+        <!-- TimeLock Section -->
+        <div class="footer-section timelock-section">
+          <h3>TimeLock</h3>
+          <p>Your password vault — keep every credential safe, synced, and always at your fingertips.</p>
+        </div>
+        
+        <!-- Navigation Section -->
+        <div class="footer-section">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="./">Home</a></li>
+            <li><a href="./dashboard">Options</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Information Section -->
+        <div class="footer-section">
+          <h4>Information</h4>
+          <ul class="footer-info">
+            <li>Email: TimeLock888@gmail.com</li>
+            <li>Address: New York</li>
+            <li>Phone: +46 123 456 7890</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Copyright Section -->
+      <div class="footer-bottom">
+        <p class="copyright">© 2025 Alexandru C.A — Licensed under CC BY 4.0</p>
+        
+        <!-- Social Icons -->
+        <div class="social-icons">
+          <a href="https://www.linkedin.com/in/alexandru-ca/" target="_blank" rel="noopener" class="social-icon">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" target="_blank" rel="noopener" class="social-icon">
+            <i class="fab fa-github"></i>
           </a>
         </div>
       </div>

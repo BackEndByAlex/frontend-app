@@ -1,11 +1,8 @@
 html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
   background-color: #0f172a;
 }
+
+/* 
 
 * {
   box-sizing: border-box;
@@ -18,7 +15,6 @@ main {
   flex-direction: column;
 }
 
-/* Globala knappar */
 .btn-primary {
   display: inline-block;
   background-color: #003865;
@@ -111,4 +107,5 @@ body.sidebar-visible .feedback-display {
   margin-left: 0px;
   transition: margin 0.3s ease;
   }
-}
+} 
+  */
