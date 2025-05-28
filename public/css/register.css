@@ -1,73 +1,316 @@
-.register-page {
-  max-width: 420px;
-  margin: 4rem auto;
-  background-color: #1e293b;
-  padding: 2rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+/* Import ManRope font */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.register-page h1 {
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #14054F;
+  font-weight: bolder;
+}
+
+.register-container {
+  display: flex;
+  min-height: calc(100vh - 85px); /* Account for header/footer */
+  margin-top: 80px; /* Push down from header */
+}
+
+/* === LEFT SIDE === */
+.register-left {
+  flex: 0.6;
+  background: url('../img/index-background.png') center/cover no-repeat;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem; /* Increased padding to shrink visible area */
+  margin: 2rem; /* Add margin to shrink the image container */
+  border-radius: 20px; /* Optional: rounded corners */
+  overflow: hidden;
+}
+
+.register-left::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.back-to-website {
+  position: relative;
+  z-index: 2;
+  align-self: flex-end;
+}
+
+.back-btn {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: white;
+  text-decoration: none;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.slide-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end; /* Move text towards bottom */
+  justify-content: center;
+  flex: 1;
   text-align: center;
+  padding-bottom: 4rem; /* Push text up from bottom */
+}
+
+.slide-content h2 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 2rem; /* Smaller text */
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  max-width: 400px; /* Smaller max-width */
+}
+
+.slide-indicators {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
   margin-bottom: 2rem;
-  font-size: 1.8rem;
-  color: #38bdf8;
+}
+
+.indicator {
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: white;
+}
+
+/* === RIGHT SIDE === */
+.register-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.register-form-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.register-form-container h1 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.login-link {
+  color: #94a3b8;
+  margin-bottom: 6rem;
+  font-size: 0.9rem;
+}
+
+.login-link a {
+  color: #99208B;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
 }
 
 #register-form {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
-#register-form input {
-  background-color: #0f172a;
-  border: 1px solid #334155;
-  border-radius: 6px;
-  padding: 0.75rem;
-  color: #f8fafc;
+.name-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+#register-form input[type="text"],
+#register-form input[type="email"],
+#register-form input[type="password"] {
+  background: #5300E4;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  color: white;
   font-size: 1rem;
-  margin-bottom: 1rem;
+  font-family: 'Manrope', sans-serif;
   outline: none;
+  transition: all 0.3s ease;
+  width: 100%; /* Same width as name-row */
 }
 
 #register-form input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#register-form input:focus {
+  background: #5b21b6;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #8b5cf6;
+}
+
+.checkbox-container label {
   color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.checkbox-container label a {
+  color: #99208B;
+  text-decoration: none;
+}
+
+.checkbox-container label a:hover {
+  text-decoration: underline;
 }
 
 #register-form button {
-  background-color: #38bdf8;
+  background: #5300E4;
+  color: white;
   border: none;
-  padding: 0.8rem;
-  border-radius: 6px;
-  color: #0f172a;
-  font-weight: bold;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Manrope', sans-serif;
   cursor: pointer;
-  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  width: 100%; /* Same width as other fields */
 }
 
 #register-form button:hover {
-  background-color: #0ea5e9;
+  background: #7c3aed;
+  transform: translateY(-2px);
+}
+
+.divider {
+  text-align: center;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: #374151;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+.divider span {
+  color: #94a3b8;
+  padding: 0 1rem;
+  font-size: 0.9rem;
 }
 
 #google-login {
   width: 100%;
-  background-color: #f8fafc;
-  color: #1e293b;
-  border: none;
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
   padding: 0.75rem;
-  font-weight: 600;
-  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: 'Manrope', sans-serif;
   cursor: pointer;
-  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
 }
 
 #google-login:hover {
-  background-color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
-p {
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.error-message {
+  color: #f87171;
+  font-size: 0.9rem;
+  margin-top: 1rem;
   text-align: center;
-  margin-top: 1.5rem;
-  color: #94a3b8;
-  font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .register-container {
+    flex-direction: column;
+    min-height: auto;
+  }
+  
+  .register-left {
+    min-height: 50vh;
+  }
+  
+  .slide-content h2 {
+    font-size: 2rem;
+  }
+  
+  .name-row {
+    grid-template-columns: 1fr;
+  }
 }
