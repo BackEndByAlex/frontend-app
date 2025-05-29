@@ -1,0 +1,231 @@
+/* topbar.css - Topbar styles - OPTIMERAD */
+
+/* OPTIMERAD: Preload font med font-display: swap för bättre loading */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap');
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 3rem;
+  position: relative;
+  /* Lägg till containment */
+  contain: layout style;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  /* OPTIMERAD: Minska transition tid och specificera property */
+  transition: color 0.15s ease;
+}
+
+.breadcrumb-item:hover {
+  color: white;
+}
+
+.breadcrumb-separator {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.breadcrumb-current {
+  color: #8b5cf6;
+  font-weight: 500;
+}
+
+/* Top bar actions */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  /* Lägg till containment för actions section */
+  contain: layout style;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  /* Lägg till containment per action item */
+  contain: layout paint;
+}
+
+/* KRITISK OPTIMERING: Action buttons (256ms lag här!) */
+.action-button {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  /* KRITISK: Minska transition tid från 0.2s till 0.1s och specificera properties */
+  transition: background-color 0.1s ease, border-color 0.1s ease;
+  position: relative;
+  /* Ta bort will-change - lägg bara till under hover */
+  transform: translateZ(0); /* GPU acceleration */
+}
+
+.action-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  /* Lägg till will-change bara under hover */
+  will-change: background-color, border-color;
+}
+
+/* Ta bort will-change efter hover */
+.action-button:not(:hover) {
+  will-change: auto;
+}
+
+.action-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  text-align: center;
+  /* Lägg till transition för smooth label changes */
+  transition: color 0.1s ease;
+}
+
+/* Search button */
+.search-button {
+  color: white;
+}
+
+/* X/+ toggle button - OPTIMERAD */
+.toggle-button {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 300;
+  transform: rotate(0deg);
+  /* KRITISK: Minska transition tid för rotation */
+  transition: transform 0.2s ease;
+  /* GPU acceleration för smooth rotation */
+  will-change: transform;
+}
+
+.toggle-button.active {
+  transform: rotate(45deg);
+}
+
+/* Ta bort will-change när inte aktiv */
+.toggle-button:not(.active) {
+  will-change: auto;
+}
+
+/* Notifications */
+.notification-button {
+  color: white;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: #ef4444;
+  border-radius: 50%;
+  /* Optimera badge rendering */
+  contain: layout paint;
+}
+
+/* User Profile - OPTIMERAD */
+.user-profile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  /* Lägg till hover transition */
+  transition: transform 0.1s ease;
+}
+
+.user-profile:hover {
+  transform: translateY(-1px);
+  will-change: transform;
+}
+
+.user-profile:not(:hover) {
+  will-change: auto;
+}
+
+.user-avatar {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: white;
+  /* OPTIMERAD: Minska box-shadow blur för bättre prestanda */
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+  /* GPU acceleration */
+  transform: translateZ(0);
+  contain: layout paint;
+}
+
+/* Mobile optimering */
+@media (max-width: 768px) {
+  .topbar {
+    padding: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .breadcrumb {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .topbar-actions {
+    gap: 1rem;
+  }
+  
+  .action-item {
+    gap: 0.25rem;
+  }
+  
+  .action-label {
+    font-size: 0.7rem;
+  }
+  
+  /* Snabbare transitions på mobil */
+  .action-button {
+    transition: background-color 0.05s ease, border-color 0.05s ease;
+  }
+  
+  .breadcrumb-item {
+    transition: color 0.1s ease;
+  }
+  
+  /* Förenkla box-shadow på mobil */
+  .user-avatar {
+    box-shadow: 0 1px 4px rgba(139, 92, 246, 0.2);
+  }
+}
+
+/* Performance hints för hover states */
+.topbar:hover .action-button {
+  will-change: background-color, border-color;
+}
+
+.topbar:not(:hover) .action-button {
+  will-change: auto;
+}

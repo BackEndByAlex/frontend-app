@@ -1,0 +1,46 @@
+/* content-area.css - Content area styles */
+
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  position: relative; /* Lägg till för att password-window ska positioneras relativt detta */
+}
+
+/* Page header */
+.page-header {
+  margin-left: 3rem;
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.75rem;
+  letter-spacing: -1px;
+}
+
+.page-subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+/* Dashboard section */
+.dashboard-section {
+  display: none;
+}
+
+.dashboard-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translate3d(0, 20px, 0); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translate3d(0, 0, 0); 
+  }
+}

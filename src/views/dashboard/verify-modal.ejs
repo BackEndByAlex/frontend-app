@@ -1,0 +1,14 @@
+<!-- Modal Overlay -->
+<div class="modal-overlay" id="modalOverlay"></div>
+<!-- Verify Modal -->
+<div class="modal-overlay" id="modalOverlay"></div>
+<div class="verify-modal" id="verifyModal">
+  <h3>Authentication</h3>
+  <p>The verification code has been send to your E-mail.</p>
+  <form action="/verify-code" method="POST" class="verify-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="text" name="code" class="verify-input" placeholder="Add your kod here" maxlength="6" required
+      autocomplete="off">
+    <button type="submit" class="verify-submit">Verify</button>
+  </form>
+</div>

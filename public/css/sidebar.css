@@ -1,0 +1,178 @@
+/* sidebar.css - Sidebar styles - OPTIMERAD */
+
+.sidebar {
+  width: 280px;
+  background: rgba(10, 10, 10, 0.4);
+  /* KRITISK FÖRÄNDRING: Minska blur från 40px till 6px */
+  backdrop-filter: blur(6px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 0;
+  transform: translateZ(0);
+  /* Ta bort will-change - bara använd när animering pågår */
+  contain: layout style;
+}
+
+/* Logo section */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 2rem;
+  margin-bottom: 3rem;
+}
+
+.logo-icon {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+/* Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 0 1.5rem;
+  /* Lägg till containment för nav section */
+  contain: layout style;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.75rem;
+  border-radius: 14px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  /* OPTIMERAD TRANSITION: Specificera exakt properties och minska tid */
+  transition: background-color 0.15s ease, color 0.15s ease;
+  position: relative;
+  /* Ta bort will-change - lägg bara till under hover */
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  /* Lägg till will-change bara under hover */
+  will-change: background-color;
+}
+
+/* Ta bort will-change efter hover */
+.nav-item:not(:hover) {
+  will-change: auto;
+}
+
+.nav-item.active {
+  background: rgba(139, 92, 246, 0.15);
+  color: #8b5cf6;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 24px;
+  background: #8b5cf6;
+  border-radius: 0 4px 4px 0;
+  /* Lägg till containment för pseudo-element */
+  contain: layout paint;
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Optimera SVG rendering */
+  contain: layout paint;
+}
+
+.nav-text {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Bottom section */
+.sidebar-bottom {
+  padding: 0 1.5rem;
+  margin-top: auto;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 2rem 0;
+}
+
+/* Logout button specifics - OPTIMERAD */
+.btn-logout {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  /* Lägg till snabb transition för hover */
+  transition: color 0.1s ease;
+}
+
+.btn-logout:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Mobile optimering - Ta bort backdrop-filter */
+@media (max-width: 1024px) {
+  .sidebar {
+    /* Ta bort backdrop-filter på tablet/mobil */
+    backdrop-filter: none;
+    /* Kompensera med mörkare bakgrund */
+    background: rgba(10, 10, 10, 0.95);
+    /* Snabbare transition för mobile menu */
+    transition: transform 0.2s ease;
+  }
+  
+  /* Snabbare hover på mobil/tablet */
+  .nav-item {
+    transition: background-color 0.1s ease, color 0.1s ease;
+  }
+}
+
+/* Desktop-specific optimering */
+@media (min-width: 1025px) {
+  .sidebar {
+    /* Behåll måttlig blur bara på desktop */
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* Preload hint för bättre hover performance */
+.sidebar:hover .nav-item {
+  will-change: background-color;
+}
+
+.sidebar:not(:hover) .nav-item {
+  will-change: auto;
+}

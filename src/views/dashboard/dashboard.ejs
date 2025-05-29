@@ -1,18 +1,45 @@
-<link rel="stylesheet" href="./css/dashboard.css">
+<!-- Import all CSS components -->
+<link rel="stylesheet" href="./css/base.css">
+<link rel="stylesheet" href="./css/sidebar.css">
+<link rel="stylesheet" href="./css/topbar.css">
+<link rel="stylesheet" href="./css/content-area.css">
+<link rel="stylesheet" href="./css/modal.css">
+<link rel="stylesheet" href="./css/password-modal.css">
+<link rel="stylesheet" href="./css/responsive.css">
+
 <script type="module" src="./js/checkSession.js"></script>
+<script type="module" src="./js/dashboard.js"></script>
+<script type="module" src="./js/password-modal.js"></script>
 
-<button class="menu-toggle" aria-label="Öppna meny">☰</button>
-<%- include('./sidebar') %>
-<%- include('../partials/flashmeddelande') %>
+<div class="dashboard-container">
+  <!-- Full page background -->
+  <div class="dashboard-bg"></div>
 
-<main class="dashboard-content">
-  <h1>Välkommen, <%= user?.name %> 👋</h1>
+  <!-- Glassmorphism overlay container -->
+  <div class="glassmorphism-overlay">
 
-  <% if (!isCodeVerified) { %>
-    <%- include('./verifiering') %>
-  <% } else { %>
-    <%- include('./generator') %>
-    <%- include('./sparade') %>
-    <%- include('./inställningar') %>
-  <% } %>
-</main>
+    <!-- Sidebar -->
+    <%- include('./sidebar') %>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <%- include('./topbar') %>
+
+      <!-- Content Area -->
+      <%- include('./content-area') %>
+    </main>
+  </div>
+
+  <!-- Mobile Menu Toggle -->
+  <button class="menu-toggle" id="menuToggle" aria-label="Öppna meny">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <%- include('./verify-modal') %>
+
+</div>

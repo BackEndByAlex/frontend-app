@@ -1,0 +1,159 @@
+/* modal.css - Modal styles - OPTIMERAD */
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+  /* Lägg till GPU acceleration för smooth fade */
+  transform: translateZ(0);
+}
+
+.modal-overlay.active {
+  display: block;
+}
+
+/* Verify modal/popup - KRITISK OPTIMERING */
+.verify-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(10, 10, 10, 0.95);
+  /* KRITISK: Minska blur från 40px till 8px */
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 90%;
+  max-width: 450px;
+  z-index: 1000;
+  display: none;
+  /* Lägg till containment och GPU acceleration */
+  contain: layout style paint;
+  transform: translate(-50%, -50%) translateZ(0);
+}
+
+.verify-modal.active {
+  display: block;
+}
+
+.verify-modal h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.verify-modal p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.verify-form {
+  display: flex;
+  flex-direction: column;
+  /* Lägg till containment för form */
+  contain: layout style;
+}
+
+.verify-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  /* OPTIMERAD: Specificera properties och minska tid */
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  letter-spacing: 0.5em;
+  /* GPU acceleration */
+  transform: translateZ(0);
+}
+
+.verify-input:focus {
+  border-color: #8b5cf6;
+  /* OPTIMERAD: Minska box-shadow blur */
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+  will-change: border-color;
+}
+
+.verify-input:not(:focus) {
+  will-change: auto;
+}
+
+.verify-submit {
+  width: 100%;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  /* OPTIMERAD: Minska transition tid och specificera properties */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* GPU acceleration */
+  transform: translateZ(0);
+}
+
+.verify-submit:hover {
+  transform: translateY(-2px) translateZ(0);
+  /* OPTIMERAD: Minska box-shadow blur */
+  box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+  will-change: transform;
+}
+
+.verify-submit:not(:hover) {
+  will-change: auto;
+}
+
+/* Mobile optimering - Ta bort backdrop-filter */
+@media (max-width: 768px) {
+  .verify-modal {
+    /* KRITISK: Ta bort backdrop-filter på mobil */
+    backdrop-filter: none;
+    /* Kompensera med mörkare bakgrund */
+    background: rgba(10, 10, 10, 0.98);
+    /* Mindre padding på mobil */
+    padding: 2rem;
+    width: 95%;
+  }
+  
+  /* Snabbare transitions på mobil */
+  .verify-input {
+    transition: border-color 0.1s ease, box-shadow 0.1s ease;
+  }
+  
+  .verify-submit {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+}
+
+/* Desktop optimering */
+@media (min-width: 769px) {
+  .verify-modal {
+    /* Behåll måttlig blur bara på desktop */
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Performance hint för modal animations */
+.modal-overlay.active .verify-modal {
+  will-change: transform;
+}
+
+.modal-overlay:not(.active) .verify-modal {
+  will-change: auto;
+}
